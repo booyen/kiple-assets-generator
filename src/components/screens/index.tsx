@@ -17,6 +17,7 @@ import { ReloadMethodScreen } from './ReloadMethodScreen';
 import { ReloadAmountModal } from './ReloadAmountModal';
 import { ReloadReceiptScreen } from './ReloadReceiptScreen';
 import { AutoReloadScreen } from './AutoReloadScreen';
+import { HomeWithReloadModal } from './HomeWithReloadModal';
 
 export interface ScreenInfo {
   id: string;
@@ -59,6 +60,7 @@ export const screens: ScreenInfo[] = [
   // Home
   { id: 'home', name: 'Home', category: 'home', component: () => <HomeScreen hideBalance={false} /> },
   { id: 'home-hidden', name: 'Home (Hidden Balance)', category: 'home', component: () => <HomeScreen hideBalance={true} /> },
+  { id: 'home-reload-modal', name: 'Home + Reload Modal', category: 'home', component: () => <HomeWithReloadModal hideBalance={false} /> },
 
   // Reload Wallet
   { id: 'reload-method', name: 'Reload Method', category: 'reload', component: () => <ReloadMethodScreen variant="default" /> },
@@ -105,4 +107,5 @@ export {
   ReloadAmountModal,
   ReloadReceiptScreen,
   AutoReloadScreen,
+  HomeWithReloadModal,
 };
