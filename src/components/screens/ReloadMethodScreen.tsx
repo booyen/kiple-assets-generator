@@ -48,7 +48,7 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
     >
       <div className="flex-shrink-0">{icon}</div>
       <div className="flex-1">
-        <div style={{ ...typography.body, fontSize: '14px', color: textPrimaryColor }}>
+        <div style={{ ...typography.body, color: textPrimaryColor }}>
           {title}
         </div>
         {subtitle && (
@@ -70,7 +70,7 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
           style={{ color: primaryColor }}
         >
           <Copy size={14} />
-          <span style={{ ...typography.small, fontSize: '12px' }}>Copy</span>
+          <span style={{ ...typography.small }}>Copy</span>
         </button>
       )}
       {isSelected && (
@@ -177,7 +177,7 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
             <PaymentOption
               icon={
                 <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                  <span style={{ ...typography.body, fontSize: '11px', fontWeight: 700 }}>
+                  <span style={{ ...typography.body, fontWeight: 700 }}>
                     FPX
                   </span>
                 </div>
