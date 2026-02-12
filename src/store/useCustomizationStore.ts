@@ -340,7 +340,7 @@ export const useCustomizationStore = create<CustomizationStore>()(
     }),
     }),
     {
-      name: 'kiple-assets-generator',
+      name: 'kiple-mockup-generator',
       version: 1,
     }
   )

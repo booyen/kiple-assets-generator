@@ -194,7 +194,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-3">
           <img src="/img/klw.png" alt="KiplePay" className="h-8 w-auto" />
           <div>
-            <h1 className="text-lg font-bold text-slate-900">KiplePay e-wallet generator</h1>
+            <h1 className="text-lg font-bold text-slate-900">KiplePay Mockup Builder</h1>
             <div className="flex items-center gap-2">
               <p className="text-xs text-slate-500">Sep Produk buat ni deh</p>
               <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-700 rounded">v1.0.0</span>
