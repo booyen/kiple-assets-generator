@@ -1,65 +1,222 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useRef, useCallback, useState } from 'react';
+import { Sidebar, Preview, ExportPanel, ExportSettings } from '@/components/dashboard';
+import { useCustomizationStore } from '@/store/useCustomizationStore';
+import { screens } from '@/components/screens';
+import { DeviceFrame } from '@/components/ui';
+import { downloadElement, generateFilename, exportElement } from '@/lib/exportImage';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+
+export default function Dashboard() {
+  const screenRef = useRef<HTMLDivElement>(null);
+  const { currentScreen, selectedScreens, exportFormat, includeDeviceFrame, deviceType } = useCustomizationStore();
+  const [exportProgress, setExportProgress] = useState<string | null>(null);
+
+  const handleExportCurrent = useCallback(async () => {
+    if (!screenRef.current) return;
+
+    const filename = generateFilename(currentScreen, exportFormat);
+    await downloadElement(screenRef.current, {
+      format: exportFormat,
+      filename,
+      scale: 2,
+    });
+  }, [currentScreen, exportFormat]);
+
+  const handleExportSelected = useCallback(async () => {
+    if (selectedScreens.length === 0) return;
+
+    const store = useCustomizationStore.getState();
+    const { includeDeviceFrame, deviceType, exportFormat } = store;
+
+    setExportProgress('Preparing export...');
+
+    const zip = new JSZip();
+    const folder = zip.folder('screens');
+
+    if (!folder) {
+      setExportProgress(null);
+      return;
+    }
+
+    // Create a hidden container for rendering
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.left = '-9999px';
+    container.style.top = '-9999px';
+    document.body.appendChild(container);
+
+    try {
+      for (let i = 0; i < selectedScreens.length; i++) {
+        const screenId = selectedScreens[i];
+        setExportProgress(`Exporting ${i + 1} of ${selectedScreens.length}...`);
+
+        // Create a temporary element for this screen
+        const tempDiv = document.createElement('div');
+        container.appendChild(tempDiv);
+
+        // Render the screen using React
+        const { createRoot } = await import('react-dom/client');
+        const root = createRoot(tempDiv);
+
+        // Create wrapper that includes DeviceFrame if needed
+        const ScreenWrapper = () => {
+          const Component = screens.find(s => s.id === screenId)?.component;
+          if (!Component) return null;
+
+          return (
+            <DeviceFrame deviceType={deviceType} showFrame={includeDeviceFrame}>
+              <div style={{ width: '375px', height: '812px' }}>
+                <Component />
+              </div>
+            </DeviceFrame>
+          );
+        };
+
+        root.render(<ScreenWrapper />);
+
+        // Wait for render to complete
+        await new Promise(resolve => setTimeout(resolve, 150));
+
+        // Export the element
+        const blob = await exportElement(tempDiv, {
+          format: exportFormat,
+          scale: 2,
+        });
+
+        const filename = generateFilename(screenId, exportFormat);
+        folder.file(filename, blob);
+
+        // Cleanup
+        root.unmount();
+        container.removeChild(tempDiv);
+      }
+
+      // Generate and download ZIP
+      setExportProgress('Creating ZIP file...');
+      const zipBlob = await zip.generateAsync({
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: { level: 6 },
+      });
+
+      const timestamp = new Date().toISOString().split('T')[0];
+      saveAs(zipBlob, `kiple-screens-${timestamp}.zip`);
+    } finally {
+      document.body.removeChild(container);
+      setExportProgress(null);
+    }
+  }, [selectedScreens]);
+
+  const handleExportAll = useCallback(async () => {
+    const allScreenIds = screens.map(s => s.id);
+    const store = useCustomizationStore.getState();
+    const { includeDeviceFrame, deviceType, exportFormat } = store;
+
+    store.selectAllScreens();
+
+    setExportProgress('Preparing export...');
+
+    const zip = new JSZip();
+    const folder = zip.folder('screens');
+
+    if (!folder) {
+      setExportProgress(null);
+      return;
+    }
+
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.left = '-9999px';
+    container.style.top = '-9999px';
+    document.body.appendChild(container);
+
+    try {
+      for (let i = 0; i < allScreenIds.length; i++) {
+        const screenId = allScreenIds[i];
+        setExportProgress(`Exporting ${i + 1} of ${allScreenIds.length}...`);
+
+        const tempDiv = document.createElement('div');
+        container.appendChild(tempDiv);
+
+        const { createRoot } = await import('react-dom/client');
+        const root = createRoot(tempDiv);
+
+        const ScreenWrapper = () => {
+          const Component = screens.find(s => s.id === screenId)?.component;
+          if (!Component) return null;
+
+          return (
+            <DeviceFrame deviceType={deviceType} showFrame={includeDeviceFrame}>
+              <div style={{ width: '375px', height: '812px' }}>
+                <Component />
+              </div>
+            </DeviceFrame>
+          );
+        };
+
+        root.render(<ScreenWrapper />);
+        await new Promise(resolve => setTimeout(resolve, 150));
+
+        const blob = await exportElement(tempDiv, {
+          format: exportFormat,
+          scale: 2,
+        });
+
+        const filename = generateFilename(screenId, exportFormat);
+        folder.file(filename, blob);
+
+        root.unmount();
+        container.removeChild(tempDiv);
+      }
+
+      setExportProgress('Creating ZIP file...');
+      const zipBlob = await zip.generateAsync({
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: { level: 6 },
+      });
+
+      const timestamp = new Date().toISOString().split('T')[0];
+      saveAs(zipBlob, `kiple-all-screens-${timestamp}.zip`);
+    } finally {
+      document.body.removeChild(container);
+      setExportProgress(null);
+    }
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="h-screen flex flex-col bg-slate-100">
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img src="/img/klw.png" alt="KiplePay" className="h-8 w-auto" />
+          <div>
+            <h1 className="text-lg font-bold text-slate-900">KiplePay e-wallet generator</h1>
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-slate-500">Sep Produk buat ni deh</p>
+              <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-700 rounded">v1.0.0</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Export settings in header */}
+        <ExportSettings
+          onExportCurrent={handleExportCurrent}
+          onExportSelected={handleExportSelected}
+          onExportAll={handleExportAll}
+          exportProgress={exportProgress}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </header>
+
+      {/* Main content */}
+      <div className="flex-1 flex overflow-hidden">
+        <Sidebar />
+        <Preview screenRef={screenRef} />
+        <ExportPanel />
+      </div>
     </div>
   );
 }
