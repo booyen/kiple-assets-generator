@@ -9,23 +9,25 @@ const inter = Inter({
 
 const roboto = Roboto({
   variable: "--font-roboto",
-  weight: ["300", "400", "500", "700"],
+  weight: ["300", "400", "500", "700", "900"],
   subsets: ["latin"],
 });
 
 const poppins = Poppins({
   variable: "--font-poppins",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   subsets: ["latin"],
 });
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
+  weight: ["300", "400", "500", "600", "700", "800"],
   subsets: ["latin"],
 });
 
 const openSans = Open_Sans({
   variable: "--font-opensans",
+  weight: ["300", "400", "500", "600", "700", "800"],
   subsets: ["latin"],
 });
 
@@ -37,6 +39,7 @@ const lato = Lato({
 
 const nunito = Nunito({
   variable: "--font-nunito",
+  weight: ["300", "400", "500", "600", "700", "800"],
   subsets: ["latin"],
 });
 
