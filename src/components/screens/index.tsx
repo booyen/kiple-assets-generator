@@ -13,11 +13,15 @@ import { KycIdTypeScreen } from './KycIdTypeScreen';
 import { KycConfirmScreen } from './KycConfirmScreen';
 import { LoadingScreen } from './LoadingScreen';
 import { KycSuccessScreen } from './KycSuccessScreen';
+import { ReloadMethodScreen } from './ReloadMethodScreen';
+import { ReloadAmountModal } from './ReloadAmountModal';
+import { ReloadReceiptScreen } from './ReloadReceiptScreen';
+import { AutoReloadScreen } from './AutoReloadScreen';
 
 export interface ScreenInfo {
   id: string;
   name: string;
-  category: 'splash' | 'onboarding' | 'auth' | 'ekyc' | 'home';
+  category: 'splash' | 'onboarding' | 'auth' | 'ekyc' | 'home' | 'reload';
   component: React.ComponentType;
 }
 
@@ -55,6 +59,16 @@ export const screens: ScreenInfo[] = [
   // Home
   { id: 'home', name: 'Home', category: 'home', component: () => <HomeScreen hideBalance={false} /> },
   { id: 'home-hidden', name: 'Home (Hidden Balance)', category: 'home', component: () => <HomeScreen hideBalance={true} /> },
+
+  // Reload Wallet
+  { id: 'reload-method', name: 'Reload Method', category: 'reload', component: () => <ReloadMethodScreen variant="default" /> },
+  { id: 'reload-method-saved', name: 'Reload Method (Saved Card)', category: 'reload', component: () => <ReloadMethodScreen variant="saved-card" /> },
+  { id: 'reload-method-banking', name: 'Reload Method (Online Banking)', category: 'reload', component: () => <ReloadMethodScreen variant="online-banking" /> },
+  { id: 'reload-method-card', name: 'Reload Method (Credit Card)', category: 'reload', component: () => <ReloadMethodScreen variant="credit-card" /> },
+  { id: 'reload-amount', name: 'Enter Amount', category: 'reload', component: ReloadAmountModal },
+  { id: 'reload-success', name: 'Reload Success', category: 'reload', component: () => <ReloadReceiptScreen variant="success" /> },
+  { id: 'reload-failed', name: 'Reload Failed', category: 'reload', component: () => <ReloadReceiptScreen variant="failed" /> },
+  { id: 'auto-reload', name: 'Auto-Reload', category: 'reload', component: AutoReloadScreen },
 ];
 
 export function getScreenById(id: string): ScreenInfo | undefined {
@@ -87,4 +101,8 @@ export {
   KycConfirmScreen,
   LoadingScreen,
   KycSuccessScreen,
+  ReloadMethodScreen,
+  ReloadAmountModal,
+  ReloadReceiptScreen,
+  AutoReloadScreen,
 };

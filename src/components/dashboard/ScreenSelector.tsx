@@ -11,6 +11,7 @@ const categories = [
   { id: 'auth', label: 'Authentication', icon: '🔐' },
   { id: 'ekyc', label: 'eKYC Verification', icon: '🪪' },
   { id: 'home', label: 'Home Screen', icon: '🏠' },
+  { id: 'reload', label: 'Reload Wallet', icon: '💰' },
 ] as const;
 
 export function ScreenSelector() {
