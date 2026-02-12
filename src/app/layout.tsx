@@ -41,8 +41,8 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Kiple Assets Generator",
-  description: "White-label screen generator for e-wallet mockups",
+  title: "Kiple Mockup Generator",
+  description: "Customize and generate branded e-wallet screen mockups",
 };
 
 export default function RootLayout({
