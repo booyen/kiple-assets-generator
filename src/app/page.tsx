@@ -196,8 +196,10 @@ export default function Dashboard() {
           <div>
             <h1 className="text-lg font-bold text-slate-900">KiplePay Mockup Builder</h1>
             <div className="flex items-center gap-2">
-              <p className="text-xs text-slate-500">Sep Produk buat ni deh</p>
-              <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-700 rounded">v1.0.0</span>
+              <p className="text-xs text-slate-500">BY Products & Solutions Teams</p>
+              <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-700 rounded">
+                {process.env.NEXT_PUBLIC_GIT_HASH || 'dev'}
+              </span>
             </div>
           </div>
         </div>
