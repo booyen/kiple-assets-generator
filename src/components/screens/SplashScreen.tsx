@@ -1,21 +1,23 @@
 'use client';
 
 import { useCustomizationStore } from '@/store/useCustomizationStore';
-import { Logo } from './shared/Logo';
 
 export function SplashScreen() {
-  const { logo, appName, primaryColor, backgroundColor } = useCustomizationStore();
+  const { logo, appName, backgroundColor } = useCustomizationStore();
+
+  // Use custom logo if provided, otherwise use default Kiple logo
+  const logoSrc = logo || '/img/klw.png';
 
   return (
     <div
       className="mobile-screen flex items-center justify-center"
       style={{ backgroundColor }}
     >
-      <Logo
-        logo={logo}
-        appName={appName}
-        primaryColor={primaryColor}
-        size="lg"
+      <img
+        src={logoSrc}
+        alt={appName}
+        style={{ width: '200px' }}
+        className="object-contain"
       />
     </div>
   );
