@@ -82,7 +82,7 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
         {/* Balance */}
         <div className="px-6 pb-4">
           <div className="flex items-center gap-2 mb-1">
-            <p style={{ ...typography.small, color: textSecondaryColor, fontSize: '12px' }}>
+            <p style={{ ...typography.small, color: textSecondaryColor }}>
               {texts.walletBalanceLabel}
             </p>
             <button>
@@ -94,7 +94,7 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
             </button>
           </div>
           <div className="flex items-center gap-2">
-            <h1 style={{ ...typography.h1, color: textPrimaryColor, fontSize: '28px', fontWeight: 700 }}>
+            <h1 style={{ ...typography.h1, color: textPrimaryColor }}>
               {hideBalance ? '********' : `${currencySymbol}${balanceAmount}`}
             </h1>
             <Info size={16} style={{ color: primaryColor }} />
@@ -107,7 +107,7 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
           </div>
           <button
             className="flex items-center gap-0.5 mt-1"
-            style={{ ...typography.small, color: primaryColor, fontWeight: 500, fontSize: '13px' }}
+            style={{ ...typography.small, color: primaryColor, fontWeight: 500 }}
           >
             {texts.seeAnalytics}
             <ChevronRight size={14} />
@@ -183,7 +183,7 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
 
       {/* Recent transactions */}
       <div className="flex-1 px-6 pb-20">
-        <h2 style={{ ...typography.h3, color: textPrimaryColor, fontSize: '16px', fontWeight: 600 }} className="mb-3">
+        <h2 style={{ ...typography.h3, color: textPrimaryColor }} className="mb-3">
           Recent Transactions
         </h2>
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
@@ -207,10 +207,10 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
                   style={{ backgroundColor: item.type === 'negative' ? '#EF4444' : '#22C55E' }}
                 />
                 <div className="min-w-0 flex-1">
-                  <p style={{ ...typography.small, color: textPrimaryColor, fontSize: '13px', fontWeight: 500 }} className="truncate">
+                  <p style={{ ...typography.small, color: textPrimaryColor, fontWeight: 500 }} className="truncate">
                     {item.name}
                   </p>
-                  <p style={{ ...typography.caption, color: textSecondaryColor, fontSize: '11px' }}>
+                  <p style={{ ...typography.caption, color: textSecondaryColor }}>
                     {item.time}
                   </p>
                 </div>
@@ -220,7 +220,6 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
                 style={{
                   ...typography.small,
                   fontWeight: 600,
-                  fontSize: '13px',
                   color: item.type === 'negative' ? '#EF4444' : '#22C55E'
                 }}
               >
