@@ -103,7 +103,7 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
           {/* Balance */}
           <div className="px-6 pb-4">
             <div className="flex items-center gap-2 mb-1">
-              <p style={{ ...typography.small, color: textSecondaryColor, fontSize: '12px' }}>
+              <p style={{ ...typography.small, color: textSecondaryColor }}>
                 {texts.walletBalanceLabel}
               </p>
               <button>
@@ -115,7 +115,7 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
               </button>
             </div>
             <div className="flex items-center gap-2">
-              <h1 style={{ ...typography.h1, color: textPrimaryColor, fontSize: '28px', fontWeight: 700 }}>
+              <h1 style={{ ...typography.h1, color: textPrimaryColor }}>
                 {hideBalance ? '********' : `${currencySymbol}${balanceAmount}`}
               </h1>
               <Info size={16} style={{ color: primaryColor }} />
