@@ -16,7 +16,7 @@ export function SplashScreen() {
       <img
         src={logoSrc}
         alt={appName}
-        style={{ width: '200px' }}
+        style={{ width: '150px' }}
         className="object-contain"
       />
     </div>
