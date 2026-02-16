@@ -2,15 +2,12 @@
 
 import React from 'react';
 import { useCustomizationStore } from '@/store/useCustomizationStore';
-import { useTypography } from '@/hooks/useTypography';
+import { useTypography, type TypographyStyles } from '@/hooks/useTypography';
 import { StatusBar } from './shared/StatusBar';
-import { BottomNav } from './shared/BottomNav';
 import { Logo } from './shared/Logo';
 import {
   Bell,
-  ChevronRight,
   ArrowRightLeft,
-  CreditCard,
   Receipt,
   Smartphone,
   MoreHorizontal,
@@ -26,6 +23,27 @@ interface HomeWithReloadModalProps {
   hideBalance?: boolean;
 }
 
+interface NumberButtonProps {
+  number: string | number;
+  typography: TypographyStyles;
+  textPrimaryColor: string;
+}
+
+function NumberButton({ number, typography, textPrimaryColor }: NumberButtonProps) {
+  return (
+    <button
+      className="h-16 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"
+      style={{
+        ...typography.h2,
+        fontSize: '28px',
+        color: textPrimaryColor,
+      }}
+    >
+      {number}
+    </button>
+  );
+}
+
 export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModalProps) {
   const {
     logo,
@@ -37,7 +55,6 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
     balanceAmount,
     texts,
     modules,
-    bannerImage,
   } = useCustomizationStore();
 
   const typography = useTypography();
@@ -51,15 +68,6 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
     more: MoreHorizontal,
   };
 
-  const moduleLabels = {
-    transfer: texts.transferLabel,
-    remittance: texts.remittanceLabel,
-    visa: texts.visaLabel,
-    payBills: texts.payBillsLabel,
-    mobileReload: texts.mobileReloadLabel,
-    more: texts.moreLabel,
-  };
-
   const activeModules = Object.entries(modules)
     .filter(([, visible]) => visible)
     .map(([key]) => key as keyof typeof moduleIcons);
@@ -67,19 +75,6 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
   const selectedAmount = '100.00';
   const quickAmounts = ['20', '50', '100', '150'];
   const selectedQuick = '150';
-
-  const NumberButton = ({ number }: { number: string | number }) => (
-    <button
-      className="h-16 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"
-      style={{
-        ...typography.h2,
-        fontSize: '28px',
-        color: textPrimaryColor,
-      }}
-    >
-      {number}
-    </button>
-  );
 
   return (
     <div className="mobile-screen flex flex-col relative">
@@ -247,8 +242,8 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
             {/* Number Pad */}
             <div className="flex-1 px-6 pb-6">
               <div className="grid grid-cols-3 gap-4 mb-6">
-                <NumberButton number={1} />
-                <NumberButton number={2} />
+                <NumberButton number={1} typography={typography} textPrimaryColor={textPrimaryColor} />
+                <NumberButton number={2} typography={typography} textPrimaryColor={textPrimaryColor} />
                 <div
                   className="h-16 flex items-center justify-center rounded-xl"
                   style={{ backgroundColor: '#EFF6FF' }}
@@ -265,16 +260,16 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
                   </span>
                 </div>
 
-                <NumberButton number={4} />
-                <NumberButton number={5} />
-                <NumberButton number={6} />
+                <NumberButton number={4} typography={typography} textPrimaryColor={textPrimaryColor} />
+                <NumberButton number={5} typography={typography} textPrimaryColor={textPrimaryColor} />
+                <NumberButton number={6} typography={typography} textPrimaryColor={textPrimaryColor} />
 
-                <NumberButton number={7} />
-                <NumberButton number={8} />
-                <NumberButton number={9} />
+                <NumberButton number={7} typography={typography} textPrimaryColor={textPrimaryColor} />
+                <NumberButton number={8} typography={typography} textPrimaryColor={textPrimaryColor} />
+                <NumberButton number={9} typography={typography} textPrimaryColor={textPrimaryColor} />
 
                 <div></div>
-                <NumberButton number={0} />
+                <NumberButton number={0} typography={typography} textPrimaryColor={textPrimaryColor} />
                 <button className="h-16 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors">
                   <Delete size={24} style={{ color: textPrimaryColor }} />
                 </button>

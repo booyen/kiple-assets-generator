@@ -2,11 +2,32 @@
 
 import React from 'react';
 import { useCustomizationStore } from '@/store/useCustomizationStore';
-import { useTypography } from '@/hooks/useTypography';
+import { useTypography, type TypographyStyles } from '@/hooks/useTypography';
 import { X, Delete } from 'lucide-react';
 
 interface ReloadAmountModalProps {
   selectedAmount?: string;
+}
+
+interface NumberButtonProps {
+  number: string | number;
+  typography: TypographyStyles;
+  textPrimaryColor: string;
+}
+
+function NumberButton({ number, typography, textPrimaryColor }: NumberButtonProps) {
+  return (
+    <button
+      className="h-16 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"
+      style={{
+        ...typography.h2,
+        fontSize: '28px',
+        color: textPrimaryColor,
+      }}
+    >
+      {number}
+    </button>
+  );
 }
 
 export function ReloadAmountModal({ selectedAmount = '100.00' }: ReloadAmountModalProps) {
@@ -22,19 +43,6 @@ export function ReloadAmountModal({ selectedAmount = '100.00' }: ReloadAmountMod
 
   const quickAmounts = ['20', '50', '100', '150'];
   const selectedQuick = selectedAmount === '150.00' ? '150' : null;
-
-  const NumberButton = ({ number }: { number: string | number }) => (
-    <button
-      className="h-16 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"
-      style={{
-        ...typography.h2,
-        fontSize: '28px',
-        color: textPrimaryColor,
-      }}
-    >
-      {number}
-    </button>
-  );
 
   return (
     <div className="mobile-screen flex flex-col bg-white">
@@ -118,8 +126,8 @@ export function ReloadAmountModal({ selectedAmount = '100.00' }: ReloadAmountMod
       {/* Number Pad */}
       <div className="flex-1 px-6 pb-6">
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <NumberButton number={1} />
-          <NumberButton number={2} />
+          <NumberButton number={1} typography={typography} textPrimaryColor={textPrimaryColor} />
+          <NumberButton number={2} typography={typography} textPrimaryColor={textPrimaryColor} />
           <div
             className="h-16 flex items-center justify-center rounded-xl"
             style={{ backgroundColor: '#EFF6FF' }}
@@ -136,16 +144,16 @@ export function ReloadAmountModal({ selectedAmount = '100.00' }: ReloadAmountMod
             </span>
           </div>
 
-          <NumberButton number={4} />
-          <NumberButton number={5} />
-          <NumberButton number={6} />
+          <NumberButton number={4} typography={typography} textPrimaryColor={textPrimaryColor} />
+          <NumberButton number={5} typography={typography} textPrimaryColor={textPrimaryColor} />
+          <NumberButton number={6} typography={typography} textPrimaryColor={textPrimaryColor} />
 
-          <NumberButton number={7} />
-          <NumberButton number={8} />
-          <NumberButton number={9} />
+          <NumberButton number={7} typography={typography} textPrimaryColor={textPrimaryColor} />
+          <NumberButton number={8} typography={typography} textPrimaryColor={textPrimaryColor} />
+          <NumberButton number={9} typography={typography} textPrimaryColor={textPrimaryColor} />
 
           <div></div>
-          <NumberButton number={0} />
+          <NumberButton number={0} typography={typography} textPrimaryColor={textPrimaryColor} />
           <button className="h-16 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors">
             <Delete size={24} style={{ color: textPrimaryColor }} />
           </button>

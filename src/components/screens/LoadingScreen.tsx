@@ -7,7 +7,7 @@ interface LoadingScreenProps {
 }
 
 export function LoadingScreen({ variant = 'default' }: LoadingScreenProps) {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textSecondaryColor, texts } = useCustomizationStore();
 
   return (
     <div

@@ -5,7 +5,7 @@ import { StatusBar } from './shared/StatusBar';
 import { Check } from 'lucide-react';
 
 export function LanguageSheetScreen() {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textPrimaryColor } = useCustomizationStore();
 
   const languages = [
     { code: 'en', name: 'English (UK)', flag: '🇬🇧', selected: true },

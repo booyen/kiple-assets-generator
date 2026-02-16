@@ -50,11 +50,17 @@ export function CollapsibleSection({
 
       {/* Content */}
       <div
-        className={`transition-all duration-200 ease-in-out ${
-          isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+        className={`grid transition-all duration-200 ease-in-out ${
+          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
         }`}
       >
-        <div className="px-3 pb-5 pt-1 border-t border-slate-100">
+        <div
+          className={`min-h-0 overflow-hidden transition-all duration-200 ${
+            isOpen
+              ? 'px-3 py-5 border-t border-slate-100'
+              : 'px-0 py-0 border-t-0'
+          }`}
+        >
           {children}
         </div>
       </div>

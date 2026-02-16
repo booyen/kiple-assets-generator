@@ -7,7 +7,7 @@ interface BiometricScreenProps {
 }
 
 export function BiometricScreen({ type }: BiometricScreenProps) {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
+  const { backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
 
   const title = type === 'touch' ? texts.touchIdTitle : texts.faceIdTitle;
   const desc = type === 'touch' ? texts.touchIdDesc : texts.faceIdDesc;

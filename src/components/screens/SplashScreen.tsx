@@ -13,6 +13,7 @@ export function SplashScreen() {
       className="mobile-screen flex items-center justify-center"
       style={{ backgroundColor }}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={logoSrc}
         alt={appName}

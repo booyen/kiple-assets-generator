@@ -1,5 +1,5 @@
 // Screen types
-export type ScreenCategory = 'splash' | 'onboarding' | 'auth' | 'ekyc' | 'home';
+export type ScreenCategory = 'splash' | 'onboarding' | 'auth' | 'ekyc' | 'home' | 'reload';
 
 // Typography types
 export type FontFamily = 'inter' | 'roboto' | 'poppins' | 'montserrat' | 'opensans' | 'lato' | 'nunito';
@@ -93,6 +93,21 @@ export interface TextCustomizations {
   idTypeStep3Desc: string;
   idTypeButton: string;
   loadingText: string;
+
+  // Reload Wallet
+  reloadSelectTitle: string;
+  reloadSavedOptionsLabel: string;
+  reloadOtherOptionsLabel: string;
+  reloadSavedCardTitle: string;
+  reloadSavedCardSubtitle: string;
+  reloadOnlineBankingTitle: string;
+  reloadCreditCardTitle: string;
+  reloadDuitNowTitle: string;
+  reloadDuitNowSubtitle: string;
+  reloadVirtualBankTitle: string;
+  reloadVirtualBankSubtitle: string;
+  reloadSevenElevenTitle: string;
+  reloadInfoNote: string;
 }
 
 export interface ModuleVisibility {
@@ -103,6 +118,21 @@ export interface ModuleVisibility {
   mobileReload: boolean;
   more: boolean;
 }
+
+export type ReloadMethodKey =
+  | 'savedCard'
+  | 'onlineBanking'
+  | 'creditCard'
+  | 'duitNow'
+  | 'virtualBank'
+  | 'sevenEleven';
+
+export interface ReloadMethodConfig {
+  enabled: boolean;
+  logo: string | null;
+}
+
+export type ReloadMethodSettings = Record<ReloadMethodKey, ReloadMethodConfig>;
 
 export type DeviceType = 'iphone' | 'android';
 export type ExportFormat = 'png' | 'jpeg';

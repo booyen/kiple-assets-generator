@@ -1,32 +1,34 @@
 'use client';
 
 import React from 'react';
-import { useCustomizationStore } from '@/store/useCustomizationStore';
-import { useTypography } from '@/hooks/useTypography';
+import { useCustomizationStore, defaultTexts } from '@/store/useCustomizationStore';
+import { useTypography, type TypographyStyles } from '@/hooks/useTypography';
 import { StatusBar } from './shared/StatusBar';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ReloadMethodKey } from '@/types';
 
-export function AutoReloadScreen() {
-  const {
-    primaryColor,
-    textPrimaryColor,
-    textSecondaryColor,
-    currencySymbol,
-  } = useCustomizationStore();
+interface AmountSectionProps {
+  title: string;
+  selectedAmount: string;
+  quickAmounts: string[];
+  currencySymbol: string;
+  primaryColor: string;
+  textPrimaryColor: string;
+  textSecondaryColor: string;
+  typography: TypographyStyles;
+}
 
-  const typography = useTypography();
-
-  const quickAmounts = ['20', '50', '100'];
-  const selectedTopUpAmount = '20';
-  const selectedAutoAmount = '20';
-
-  const AmountSection = ({
-    title,
-    selectedAmount,
-  }: {
-    title: string;
-    selectedAmount: string;
-  }) => (
+function AmountSection({
+  title,
+  selectedAmount,
+  quickAmounts,
+  currencySymbol,
+  primaryColor,
+  textPrimaryColor,
+  textSecondaryColor,
+  typography,
+}: AmountSectionProps) {
+  return (
     <div className="mb-6">
       <label
         style={{
@@ -102,6 +104,47 @@ export function AutoReloadScreen() {
       </div>
     </div>
   );
+}
+
+export function AutoReloadScreen() {
+  const {
+    primaryColor,
+    textPrimaryColor,
+    textSecondaryColor,
+    currencySymbol,
+    texts,
+    reloadMethods,
+  } = useCustomizationStore();
+
+  const typography = useTypography();
+  const withDefault = (value: string | undefined, key: keyof typeof defaultTexts): string => {
+    const normalized = typeof value === 'string' ? value.trim() : '';
+    return normalized ? value as string : defaultTexts[key];
+  };
+
+  const quickAmounts = ['20', '50', '100'];
+  const selectedTopUpAmount = '20';
+  const selectedAutoAmount = '20';
+  const methodOrder: ReloadMethodKey[] = ['savedCard', 'creditCard', 'onlineBanking', 'duitNow', 'virtualBank', 'sevenEleven'];
+  const selectedMethod = methodOrder.find((method) => reloadMethods[method].enabled) || 'savedCard';
+
+  const methodTitleMap: Record<ReloadMethodKey, string> = {
+    savedCard: withDefault(texts.reloadSavedCardTitle, 'reloadSavedCardTitle'),
+    creditCard: withDefault(texts.reloadCreditCardTitle, 'reloadCreditCardTitle'),
+    onlineBanking: withDefault(texts.reloadOnlineBankingTitle, 'reloadOnlineBankingTitle'),
+    duitNow: withDefault(texts.reloadDuitNowTitle, 'reloadDuitNowTitle'),
+    virtualBank: withDefault(texts.reloadVirtualBankTitle, 'reloadVirtualBankTitle'),
+    sevenEleven: withDefault(texts.reloadSevenElevenTitle, 'reloadSevenElevenTitle'),
+  };
+
+  const methodSubtitleMap: Record<ReloadMethodKey, string> = {
+    savedCard: withDefault(texts.reloadSavedCardSubtitle, 'reloadSavedCardSubtitle'),
+    creditCard: withDefault(texts.reloadSavedCardSubtitle, 'reloadSavedCardSubtitle'),
+    onlineBanking: '',
+    duitNow: withDefault(texts.reloadDuitNowSubtitle, 'reloadDuitNowSubtitle'),
+    virtualBank: withDefault(texts.reloadVirtualBankSubtitle, 'reloadVirtualBankSubtitle'),
+    sevenEleven: '',
+  };
 
   return (
     <div className="mobile-screen flex flex-col bg-slate-50">
@@ -129,11 +172,23 @@ export function AutoReloadScreen() {
         <AmountSection
           title="Auto top-up when balance below"
           selectedAmount={selectedTopUpAmount}
+          quickAmounts={quickAmounts}
+          currencySymbol={currencySymbol}
+          primaryColor={primaryColor}
+          textPrimaryColor={textPrimaryColor}
+          textSecondaryColor={textSecondaryColor}
+          typography={typography}
         />
 
         <AmountSection
           title="Amount to top-up"
           selectedAmount={selectedAutoAmount}
+          quickAmounts={quickAmounts}
+          currencySymbol={currencySymbol}
+          primaryColor={primaryColor}
+          textPrimaryColor={textPrimaryColor}
+          textSecondaryColor={textSecondaryColor}
+          typography={typography}
         />
 
         {/* Auto Reload With */}
@@ -153,10 +208,17 @@ export function AutoReloadScreen() {
           <button className="w-full bg-white border-2 rounded-xl px-4 py-4 flex items-center gap-3"
             style={{ borderColor: primaryColor }}
           >
-            <div className="flex items-center gap-1 flex-shrink-0">
-              <div className="w-6 h-4 bg-blue-600 rounded-sm" />
-              <div className="w-6 h-4 bg-orange-500 rounded-sm -ml-2" />
-            </div>
+            {reloadMethods[selectedMethod].logo ? (
+              <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={reloadMethods[selectedMethod].logo || ''} alt="Reload method logo" className="w-full h-full object-contain p-1" />
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <div className="w-6 h-4 bg-blue-600 rounded-sm" />
+                <div className="w-6 h-4 bg-orange-500 rounded-sm -ml-2" />
+              </div>
+            )}
             <div className="flex-1 text-left">
               <div
                 style={{
@@ -165,18 +227,20 @@ export function AutoReloadScreen() {
                   color: textPrimaryColor,
                 }}
               >
-                Pay with Credit/Debit card
+                {methodTitleMap[selectedMethod]}
               </div>
-              <div
-                style={{
-                  ...typography.small,
-                  fontSize: '12px',
-                  color: textSecondaryColor,
-                  marginTop: '2px',
-                }}
-              >
-                VISA ending in 8908
-              </div>
+              {methodSubtitleMap[selectedMethod] && (
+                <div
+                  style={{
+                    ...typography.small,
+                    fontSize: '12px',
+                    color: textSecondaryColor,
+                    marginTop: '2px',
+                  }}
+                >
+                  {methodSubtitleMap[selectedMethod]}
+                </div>
+              )}
             </div>
             <ChevronRight size={20} style={{ color: textSecondaryColor }} />
           </button>

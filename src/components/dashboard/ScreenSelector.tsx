@@ -42,6 +42,14 @@ export function ScreenSelector() {
     });
   };
 
+  const expandAllCategories = () => {
+    setExpandedCategories(new Set(categories.map((c) => c.id)));
+  };
+
+  const collapseAllCategories = () => {
+    setExpandedCategories(new Set());
+  };
+
   const toggleCategorySelection = (categoryId: string) => {
     const categoryScreens = getScreensByCategory(categoryId as typeof categories[number]['id']);
     const categoryScreenIds = categoryScreens.map(s => s.id);
@@ -162,7 +170,23 @@ export function ScreenSelector() {
         </div>
       ) : (
         // Category view
-        <div className="space-y-1">
+        <div className="space-y-2">
+          <div className="flex items-center justify-end gap-2">
+            <button
+              onClick={expandAllCategories}
+              className="px-2.5 py-1 text-xs font-medium rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+            >
+              Expand All
+            </button>
+            <button
+              onClick={collapseAllCategories}
+              className="px-2.5 py-1 text-xs font-medium rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+            >
+              Hide All
+            </button>
+          </div>
+
+          <div className="space-y-1">
           {categories.map((category) => {
         const categoryScreens = getScreensByCategory(category.id);
         const selectedInCategory = categoryScreens.filter((s) =>
@@ -229,10 +253,9 @@ export function ScreenSelector() {
             {/* Screen items */}
             {isExpanded && (
               <div className="ml-5 border-l border-slate-200 pl-2 mt-1 mb-2 space-y-0.5">
-                {categoryScreens.map((screen, index) => {
+                {categoryScreens.map((screen) => {
                   const isSelected = selectedScreens.includes(screen.id);
                   const isCurrent = currentScreen === screen.id;
-                  const isLast = index === categoryScreens.length - 1;
 
                   return (
                     <div
@@ -286,6 +309,7 @@ export function ScreenSelector() {
           </div>
         );
       })}
+          </div>
         </div>
       )}
     </div>

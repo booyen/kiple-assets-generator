@@ -2,7 +2,6 @@
 
 import { useCustomizationStore } from '@/store/useCustomizationStore';
 import { StatusBar } from './shared/StatusBar';
-import { Shield } from 'lucide-react';
 
 export function KycLockScreen() {
   const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();

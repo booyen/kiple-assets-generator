@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useCallback, useState } from 'react';
+import Image from 'next/image';
 import { Sidebar, Preview, ExportPanel, ExportSettings } from '@/components/dashboard';
 import { useCustomizationStore } from '@/store/useCustomizationStore';
 import { screens } from '@/components/screens';
@@ -11,7 +12,7 @@ import { saveAs } from 'file-saver';
 
 export default function Dashboard() {
   const screenRef = useRef<HTMLDivElement>(null);
-  const { currentScreen, selectedScreens, exportFormat, includeDeviceFrame, deviceType } = useCustomizationStore();
+  const { currentScreen, selectedScreens, exportFormat } = useCustomizationStore();
   const [exportProgress, setExportProgress] = useState<string | null>(null);
 
   const handleExportCurrent = useCallback(async () => {
@@ -192,7 +193,7 @@ export default function Dashboard() {
       {/* Header */}
       <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src="/img/klw.png" alt="KiplePay" className="h-8 w-auto" />
+          <Image src="/img/klw.png" alt="KiplePay" width={120} height={32} className="h-8 w-auto" />
           <div>
             <h1 className="text-lg font-bold text-slate-900">KiplePay Mockup Builder</h1>
             <div className="flex items-center gap-2">

@@ -19,6 +19,7 @@ export function Logo({ logo, appName, size = 'md' }: LogoProps) {
   const logoSrc = logo || '/img/klw.png';
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={logoSrc}
       alt={appName}

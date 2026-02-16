@@ -10,6 +10,7 @@ interface KycIdTypeScreenProps {
 
 export function KycIdTypeScreen({ variant = 'default' }: KycIdTypeScreenProps) {
   const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
+  const helperText = variant === 'alt' ? 'Let’s get verification done in 3 steps' : "Here's what you gotta do";
 
   const steps = [
     {
@@ -58,9 +59,7 @@ export function KycIdTypeScreen({ variant = 'default' }: KycIdTypeScreenProps) {
           {texts.idTypeDesc}
         </p>
 
-        <p className="text-sm font-medium mb-4" style={{ color: primaryColor }}>
-          Here&apos;s what you gotta do
-        </p>
+        <p className="text-sm font-medium mb-4" style={{ color: primaryColor }}>{helperText}</p>
 
         {/* Steps */}
         <div className="space-y-4">

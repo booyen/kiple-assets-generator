@@ -2,36 +2,31 @@
 
 import React from 'react';
 import { useCustomizationStore } from '@/store/useCustomizationStore';
-import { useTypography } from '@/hooks/useTypography';
+import { useTypography, type TypographyStyles } from '@/hooks/useTypography';
 import { Check, X as XIcon, Share2 } from 'lucide-react';
 
 interface ReloadReceiptScreenProps {
   variant: 'success' | 'failed';
 }
 
-export function ReloadReceiptScreen({ variant }: ReloadReceiptScreenProps) {
-  const {
-    primaryColor,
-    textPrimaryColor,
-    textSecondaryColor,
-    currencySymbol,
-  } = useCustomizationStore();
+interface ReceiptRowProps {
+  label: string;
+  value: string;
+  valueColor?: string;
+  typography: TypographyStyles;
+  textPrimaryColor: string;
+  textSecondaryColor: string;
+}
 
-  const typography = useTypography();
-
-  const isSuccess = variant === 'success';
-  const statusColor = isSuccess ? '#10B981' : '#EF4444';
-  const statusBgColor = isSuccess ? '#D1FAE5' : '#FEE2E2';
-
-  const ReceiptRow = ({
-    label,
-    value,
-    valueColor,
-  }: {
-    label: string;
-    value: string;
-    valueColor?: string;
-  }) => (
+function ReceiptRow({
+  label,
+  value,
+  valueColor,
+  typography,
+  textPrimaryColor,
+  textSecondaryColor,
+}: ReceiptRowProps) {
+  return (
     <div className="flex justify-between items-center py-3">
       <span
         style={{
@@ -54,6 +49,21 @@ export function ReloadReceiptScreen({ variant }: ReloadReceiptScreenProps) {
       </span>
     </div>
   );
+}
+
+export function ReloadReceiptScreen({ variant }: ReloadReceiptScreenProps) {
+  const {
+    primaryColor,
+    textPrimaryColor,
+    textSecondaryColor,
+    currencySymbol,
+  } = useCustomizationStore();
+
+  const typography = useTypography();
+
+  const isSuccess = variant === 'success';
+  const statusColor = isSuccess ? '#10B981' : '#EF4444';
+  const statusBgColor = isSuccess ? '#D1FAE5' : '#FEE2E2';
 
   return (
     <div className="mobile-screen flex flex-col bg-white">
@@ -115,20 +125,23 @@ export function ReloadReceiptScreen({ variant }: ReloadReceiptScreenProps) {
 
         {/* Receipt Details */}
         <div className="border-t border-slate-200">
-          <ReceiptRow label="Ref Number" value="XCXC7890000-09" />
-          <ReceiptRow label="Transaction Date & Time" value="29-09-2024, 16:38:12" />
-          <ReceiptRow label="Transaction Method" value="FPX" />
-          <ReceiptRow label="Bank Name" value="Maybank" />
+          <ReceiptRow label="Ref Number" value="XCXC7890000-09" typography={typography} textPrimaryColor={textPrimaryColor} textSecondaryColor={textSecondaryColor} />
+          <ReceiptRow label="Transaction Date & Time" value="29-09-2024, 16:38:12" typography={typography} textPrimaryColor={textPrimaryColor} textSecondaryColor={textSecondaryColor} />
+          <ReceiptRow label="Transaction Method" value="FPX" typography={typography} textPrimaryColor={textPrimaryColor} textSecondaryColor={textSecondaryColor} />
+          <ReceiptRow label="Bank Name" value="Maybank" typography={typography} textPrimaryColor={textPrimaryColor} textSecondaryColor={textSecondaryColor} />
         </div>
 
         {/* Amount Breakdown */}
         <div className="border-t border-slate-200 mt-4">
-          <ReceiptRow label="Amount" value={`${currencySymbol}100.00`} />
-          <ReceiptRow label="Fee" value={`${currencySymbol}0.00`} />
+          <ReceiptRow label="Amount" value={`${currencySymbol}100.00`} typography={typography} textPrimaryColor={textPrimaryColor} textSecondaryColor={textSecondaryColor} />
+          <ReceiptRow label="Fee" value={`${currencySymbol}0.00`} typography={typography} textPrimaryColor={textPrimaryColor} textSecondaryColor={textSecondaryColor} />
           <ReceiptRow
             label="Total"
             value={`${currencySymbol}100.00`}
             valueColor={primaryColor}
+            typography={typography}
+            textPrimaryColor={textPrimaryColor}
+            textSecondaryColor={textSecondaryColor}
           />
         </div>
       </div>

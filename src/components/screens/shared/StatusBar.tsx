@@ -3,10 +3,9 @@
 interface StatusBarProps {
   dark?: boolean;
   variant?: 'dark' | 'light';
-  primaryColor?: string;
 }
 
-export function StatusBar({ dark = false, variant, primaryColor }: StatusBarProps) {
+export function StatusBar({ dark = false, variant }: StatusBarProps) {
   // variant takes precedence over dark prop
   const textColor = variant === 'light' || dark ? '#FFFFFF' : '#1A1A2E';
 

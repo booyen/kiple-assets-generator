@@ -2,7 +2,7 @@
 
 import { useCustomizationStore } from '@/store/useCustomizationStore';
 import { StatusBar } from './shared/StatusBar';
-import { ChevronLeft, ChevronDown } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 
 export function KycConfirmScreen() {
   const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor } = useCustomizationStore();

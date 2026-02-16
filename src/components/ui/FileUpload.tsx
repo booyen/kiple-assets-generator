@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { Upload, X, Image as ImageIcon } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 
 interface FileUploadProps {
   label: string;
@@ -110,6 +110,7 @@ export function FileUpload({
       {value ? (
         <div className="relative group">
           <div className="w-full h-24 bg-slate-100 rounded-lg flex items-center justify-center border-2 border-slate-200 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={value}
               alt="Uploaded image"

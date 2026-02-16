@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useCustomizationStore } from '@/store/useCustomizationStore';
 import { ColorPicker, FileUpload, TextInput, Toggle, TypographyPanel, TextEditor, CollapsibleSection } from '@/components/ui';
-import { screens, getScreenById } from '@/components/screens';
-import { RotateCcw, Palette, Type, Grid3X3, DollarSign, FileText, Layers, Layout, Image, Coins } from 'lucide-react';
-import { LayoutStyle } from '@/types';
+import { getScreenById } from '@/components/screens';
+import { RotateCcw, Palette, Type, Grid3X3, FileText, Layers, Layout, Image as ImageIcon, Coins } from 'lucide-react';
+import { LayoutStyle, ReloadMethodKey, TextCustomizations } from '@/types';
 
 type TabId = 'branding' | 'typography' | 'text' | 'modules';
 
@@ -21,6 +21,24 @@ const tabs: Tab[] = [
   { id: 'text', label: 'Text', icon: FileText },
   { id: 'modules', label: 'Modules', icon: Layers },
 ];
+
+const reloadMethodFields: { key: ReloadMethodKey; label: string; description: string }[] = [
+  { key: 'savedCard', label: 'Saved Card', description: 'Use saved card option' },
+  { key: 'onlineBanking', label: 'Online Banking', description: 'Use FPX / online banking option' },
+  { key: 'creditCard', label: 'Credit/Debit Card', description: 'Use credit or debit card option' },
+  { key: 'duitNow', label: 'DuitNow Transfer', description: 'Use DuitNow transfer option' },
+  { key: 'virtualBank', label: 'Virtual Bank', description: 'Use virtual bank option' },
+  { key: 'sevenEleven', label: '7-Eleven (OTC)', description: 'Use over-the-counter option' },
+];
+
+const reloadMethodTextKeys: Record<ReloadMethodKey, { title: keyof TextCustomizations; subtitle?: keyof TextCustomizations }> = {
+  savedCard: { title: 'reloadSavedCardTitle', subtitle: 'reloadSavedCardSubtitle' },
+  onlineBanking: { title: 'reloadOnlineBankingTitle' },
+  creditCard: { title: 'reloadCreditCardTitle' },
+  duitNow: { title: 'reloadDuitNowTitle', subtitle: 'reloadDuitNowSubtitle' },
+  virtualBank: { title: 'reloadVirtualBankTitle', subtitle: 'reloadVirtualBankSubtitle' },
+  sevenEleven: { title: 'reloadSevenElevenTitle' },
+};
 
 export function Sidebar() {
   const store = useCustomizationStore();
@@ -132,7 +150,7 @@ export function Sidebar() {
             {/* Promotional Banner */}
             <CollapsibleSection
               title="Promotional Banner"
-              icon={<Image size={16} />}
+              icon={<ImageIcon size={16} />}
               defaultOpen={false}
             >
               <div className="space-y-2">
@@ -237,7 +255,7 @@ export function Sidebar() {
         {activeTab === 'modules' && (
           <div className="space-y-3">
             <p className="text-sm text-slate-500 mb-2">
-              Toggle modules visibility on the Home screen.
+              Toggle modules and reload method options.
             </p>
 
             <CollapsibleSection
@@ -283,6 +301,78 @@ export function Sidebar() {
                   onChange={(checked) => store.setModule('more', checked)}
                   description="Additional services menu"
                 />
+              </div>
+            </CollapsibleSection>
+
+            <CollapsibleSection
+              title="Reload Wallet Methods"
+              icon={<Grid3X3 size={16} />}
+              defaultOpen={true}
+              badge={Object.values(store.reloadMethods).filter((m) => m.enabled).length}
+            >
+              <div className="space-y-3">
+                <p className="text-xs text-slate-500">
+                  Use these switches to show/hide reload methods.
+                </p>
+                <div className="space-y-2 rounded-lg border border-slate-100 p-2">
+                  <TextInput
+                    label="Screen Title"
+                    value={store.texts.reloadSelectTitle}
+                    onChange={(value) => store.setText('reloadSelectTitle', value)}
+                  />
+                  <TextInput
+                    label="Saved Options Label"
+                    value={store.texts.reloadSavedOptionsLabel}
+                    onChange={(value) => store.setText('reloadSavedOptionsLabel', value)}
+                  />
+                  <TextInput
+                    label="Other Options Label"
+                    value={store.texts.reloadOtherOptionsLabel}
+                    onChange={(value) => store.setText('reloadOtherOptionsLabel', value)}
+                  />
+                  <TextInput
+                    label="Info Note"
+                    value={store.texts.reloadInfoNote}
+                    onChange={(value) => store.setText('reloadInfoNote', value)}
+                    multiline
+                    rows={2}
+                  />
+                </div>
+                {reloadMethodFields.map((method) => (
+                  (() => {
+                    const methodText = reloadMethodTextKeys[method.key];
+                    const subtitleKey = methodText.subtitle;
+                    return (
+                      <div key={method.key} className="space-y-2 rounded-lg border border-slate-100 p-2">
+                        <Toggle
+                          label={method.label}
+                          checked={store.reloadMethods[method.key].enabled}
+                          onChange={(checked) => store.setReloadMethodEnabled(method.key, checked)}
+                          description={method.description}
+                        />
+                        <TextInput
+                          label={`${method.label} Title`}
+                          value={store.texts[methodText.title]}
+                          onChange={(value) => store.setText(methodText.title, value)}
+                        />
+                        {subtitleKey && (
+                          <TextInput
+                            label={`${method.label} Subtitle`}
+                            value={store.texts[subtitleKey]}
+                            onChange={(value) => store.setText(subtitleKey, value)}
+                          />
+                        )}
+                        <FileUpload
+                          label={`${method.label} Logo (Optional)`}
+                          value={store.reloadMethods[method.key].logo}
+                          onChange={(logo) => store.setReloadMethodLogo(method.key, logo)}
+                          accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                          hint="Upload custom logo (optional)"
+                        />
+                      </div>
+                    );
+                  })()
+                ))}
               </div>
             </CollapsibleSection>
 

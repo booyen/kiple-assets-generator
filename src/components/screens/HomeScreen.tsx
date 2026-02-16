@@ -10,7 +10,6 @@ import {
   Bell,
   ChevronRight,
   ArrowRightLeft,
-  CreditCard,
   Receipt,
   Smartphone,
   MoreHorizontal,
@@ -162,6 +161,7 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
           }}
         >
           {bannerImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={bannerImage} alt="Promotional Banner" className="w-full h-full object-cover" />
           ) : (
             <div className="p-4 relative">

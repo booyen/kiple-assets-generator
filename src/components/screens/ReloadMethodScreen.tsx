@@ -1,43 +1,40 @@
 'use client';
 
 import React from 'react';
-import { useCustomizationStore } from '@/store/useCustomizationStore';
-import { useTypography } from '@/hooks/useTypography';
+import { useCustomizationStore, defaultTexts } from '@/store/useCustomizationStore';
+import { useTypography, type TypographyStyles } from '@/hooks/useTypography';
 import { StatusBar } from './shared/StatusBar';
-import { ArrowLeft, Check, Copy, Info } from 'lucide-react';
+import { ArrowLeft, Check, Copy } from 'lucide-react';
+import { ReloadMethodKey } from '@/types';
 
 interface ReloadMethodScreenProps {
   variant?: 'default' | 'saved-card' | 'online-banking' | 'credit-card';
 }
 
-export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenProps) {
-  const {
-    primaryColor,
-    textPrimaryColor,
-    textSecondaryColor,
-    currencySymbol,
-  } = useCustomizationStore();
+interface PaymentOptionProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  isSelected: boolean;
+  showCopy?: boolean;
+  primaryColor: string;
+  textPrimaryColor: string;
+  textSecondaryColor: string;
+  typography: TypographyStyles;
+}
 
-  const typography = useTypography();
-
-  const reloadAmount = '100';
-  const selectedMethod = variant === 'default' ? null : variant;
-
-  const PaymentOption = ({
-    icon,
-    title,
-    subtitle,
-    isSelected,
-    showCopy,
-    isFirst,
-  }: {
-    icon: React.ReactNode;
-    title: string;
-    subtitle?: string;
-    isSelected: boolean;
-    showCopy?: boolean;
-    isFirst?: boolean;
-  }) => (
+function PaymentOption({
+  icon,
+  title,
+  subtitle,
+  isSelected,
+  showCopy,
+  primaryColor,
+  textPrimaryColor,
+  textSecondaryColor,
+  typography,
+}: PaymentOptionProps) {
+  return (
     <div
       className={`bg-white rounded-xl p-4 flex items-center gap-3 ${
         isSelected ? 'border-2' : 'border border-slate-200'
@@ -83,6 +80,148 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
       )}
     </div>
   );
+}
+
+function MethodIcon({
+  method,
+  logo,
+  typography,
+}: {
+  method: ReloadMethodKey;
+  logo: string | null;
+  typography: TypographyStyles;
+}) {
+  if (logo) {
+    return (
+      <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={logo} alt={`${method} logo`} className="w-full h-full object-contain p-1" />
+      </div>
+    );
+  }
+
+  if (method === 'savedCard' || method === 'creditCard') {
+    return (
+      <div className="flex items-center gap-1">
+        <div className="w-6 h-4 bg-blue-600 rounded-sm" />
+        <div className="w-6 h-4 bg-orange-500 rounded-sm -ml-2" />
+      </div>
+    );
+  }
+
+  if (method === 'onlineBanking') {
+    return (
+      <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+        <span style={{ ...typography.body, fontWeight: 700 }}>FPX</span>
+      </div>
+    );
+  }
+
+  if (method === 'duitNow') {
+    return (
+      <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
+        <div
+          className="w-6 h-6 rounded-full flex items-center justify-center text-pink-600 font-bold"
+          style={{ backgroundColor: '#EC4899' }}
+        >
+          <span className="text-white text-lg">D</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (method === 'virtualBank') {
+    return (
+      <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+        <div className="w-6 h-4 border-2 border-slate-400 rounded-sm" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+      <div className="flex flex-col">
+        <div className="w-6 h-1 bg-orange-500 rounded" />
+        <div className="w-6 h-1 bg-green-500 rounded mt-0.5" />
+        <div className="w-6 h-1 bg-red-500 rounded mt-0.5" />
+      </div>
+    </div>
+  );
+}
+
+export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenProps) {
+  const {
+    primaryColor,
+    textPrimaryColor,
+    textSecondaryColor,
+    currencySymbol,
+    texts,
+    reloadMethods,
+  } = useCustomizationStore();
+
+  const typography = useTypography();
+  const withDefault = (value: string | undefined, key: keyof typeof defaultTexts): string => {
+    const normalized = typeof value === 'string' ? value.trim() : '';
+    return normalized ? value as string : defaultTexts[key];
+  };
+
+  const reloadAmount = '100';
+  const variantMap: Record<NonNullable<ReloadMethodScreenProps['variant']>, ReloadMethodKey | null> = {
+    default: null,
+    'saved-card': 'savedCard',
+    'online-banking': 'onlineBanking',
+    'credit-card': 'creditCard',
+  };
+  const variantMethod = variantMap[variant];
+  const selectedMethod = variantMethod && reloadMethods[variantMethod].enabled ? variantMethod : null;
+
+  const allOptions: {
+    key: ReloadMethodKey;
+    title: string;
+    subtitle?: string;
+    showCopy?: boolean;
+    section: 'saved' | 'other';
+  }[] = [
+    {
+      key: 'savedCard',
+      title: withDefault(texts.reloadSavedCardTitle, 'reloadSavedCardTitle'),
+      subtitle: withDefault(texts.reloadSavedCardSubtitle, 'reloadSavedCardSubtitle'),
+      section: 'saved',
+    },
+    {
+      key: 'onlineBanking',
+      title: withDefault(texts.reloadOnlineBankingTitle, 'reloadOnlineBankingTitle'),
+      section: 'other',
+    },
+    {
+      key: 'creditCard',
+      title: withDefault(texts.reloadCreditCardTitle, 'reloadCreditCardTitle'),
+      section: 'other',
+    },
+    {
+      key: 'duitNow',
+      title: withDefault(texts.reloadDuitNowTitle, 'reloadDuitNowTitle'),
+      subtitle: withDefault(texts.reloadDuitNowSubtitle, 'reloadDuitNowSubtitle'),
+      showCopy: true,
+      section: 'other',
+    },
+    {
+      key: 'virtualBank',
+      title: withDefault(texts.reloadVirtualBankTitle, 'reloadVirtualBankTitle'),
+      subtitle: withDefault(texts.reloadVirtualBankSubtitle, 'reloadVirtualBankSubtitle'),
+      showCopy: true,
+      section: 'other',
+    },
+    {
+      key: 'sevenEleven',
+      title: withDefault(texts.reloadSevenElevenTitle, 'reloadSevenElevenTitle'),
+      section: 'other',
+    },
+  ];
+
+  const enabledOptions = allOptions.filter((opt) => reloadMethods[opt.key].enabled);
+  const savedOptions = enabledOptions.filter((opt) => opt.section === 'saved');
+  const otherOptions = enabledOptions.filter((opt) => opt.section === 'other');
 
   return (
     <div className="mobile-screen flex flex-col bg-slate-50">
@@ -127,123 +266,101 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
             marginBottom: '16px',
           }}
         >
-          Choose reload method
+          {withDefault(texts.reloadSelectTitle, 'reloadSelectTitle')}
         </h2>
 
-        {/* Saved Options */}
-        <div className="mb-6">
-          <div
-            style={{
-              ...typography.caption,
-              fontSize: '11px',
-              fontWeight: 600,
-              color: textSecondaryColor,
-              letterSpacing: '0.5px',
-              marginBottom: '12px',
-            }}
-          >
-            SAVED OPTIONS
+        {enabledOptions.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-300 p-5 text-center bg-white">
+            <p style={{ ...typography.small, color: textSecondaryColor }}>
+              No reload method is enabled. Turn on methods in the Modules tab.
+            </p>
           </div>
+        ) : (
+          <>
+            {savedOptions.length > 0 && (
+              <div className="mb-6">
+                <div
+                  style={{
+                    ...typography.caption,
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: textSecondaryColor,
+                    letterSpacing: '0.5px',
+                    marginBottom: '12px',
+                  }}
+                >
+                  {withDefault(texts.reloadSavedOptionsLabel, 'reloadSavedOptionsLabel')}
+                </div>
 
-          <PaymentOption
-            icon={
-              <div className="flex items-center gap-1">
-                <div className="w-6 h-4 bg-blue-600 rounded-sm" />
-                <div className="w-6 h-4 bg-orange-500 rounded-sm -ml-2" />
+                <div className="space-y-3">
+                  {savedOptions.map((option) => (
+                    <PaymentOption
+                      key={option.key}
+                      icon={
+                        <MethodIcon
+                          method={option.key}
+                          logo={reloadMethods[option.key].logo}
+                          typography={typography}
+                        />
+                      }
+                      title={option.title}
+                      subtitle={option.subtitle}
+                      isSelected={selectedMethod === option.key}
+                      showCopy={option.showCopy}
+                      primaryColor={primaryColor}
+                      textPrimaryColor={textPrimaryColor}
+                      textSecondaryColor={textSecondaryColor}
+                      typography={typography}
+                    />
+                  ))}
+                </div>
               </div>
-            }
-            title="Pay with Your Saved card"
-            subtitle={variant === 'saved-card' ? 'VISA ending in 8908' : undefined}
-            isSelected={selectedMethod === 'saved-card'}
-          />
-        </div>
+            )}
 
-        {/* Other Options */}
-        <div>
-          <div
-            style={{
-              ...typography.caption,
-              fontSize: '11px',
-              fontWeight: 600,
-              color: textSecondaryColor,
-              letterSpacing: '0.5px',
-              marginBottom: '12px',
-            }}
-          >
-            OTHER OPTIONS
-          </div>
-
-          <div className="space-y-3">
-            <PaymentOption
-              icon={
-                <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                  <span style={{ ...typography.body, fontWeight: 700 }}>
-                    FPX
-                  </span>
+            {otherOptions.length > 0 && (
+              <div>
+                <div
+                  style={{
+                    ...typography.caption,
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: textSecondaryColor,
+                    letterSpacing: '0.5px',
+                    marginBottom: '12px',
+                  }}
+                >
+                  {withDefault(texts.reloadOtherOptionsLabel, 'reloadOtherOptionsLabel')}
                 </div>
-              }
-              title={variant === 'saved-card' ? 'Pay using Online Banking' : 'Pay with Online Banking'}
-              isSelected={selectedMethod === 'online-banking'}
-            />
 
-            <PaymentOption
-              icon={
-                <div className="flex items-center gap-1">
-                  <div className="w-6 h-4 bg-blue-600 rounded-sm" />
-                  <div className="w-6 h-4 bg-orange-500 rounded-sm -ml-2" />
+                <div className="space-y-3">
+                  {otherOptions.map((option) => (
+                    <PaymentOption
+                      key={option.key}
+                      icon={
+                        <MethodIcon
+                          method={option.key}
+                          logo={reloadMethods[option.key].logo}
+                          typography={typography}
+                        />
+                      }
+                      title={option.title}
+                      subtitle={option.subtitle}
+                      isSelected={selectedMethod === option.key}
+                      showCopy={option.showCopy}
+                      primaryColor={primaryColor}
+                      textPrimaryColor={textPrimaryColor}
+                      textSecondaryColor={textSecondaryColor}
+                      typography={typography}
+                    />
+                  ))}
                 </div>
-              }
-              title="Pay with Credit/Debit card"
-              isSelected={selectedMethod === 'credit-card'}
-            />
-
-            <PaymentOption
-              icon={
-                <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
-                  <div
-                    className="w-6 h-6 rounded-full flex items-center justify-center text-pink-600 font-bold"
-                    style={{ backgroundColor: '#EC4899' }}
-                  >
-                    <span className="text-white text-lg">D</span>
-                  </div>
-                </div>
-              }
-              title="DuitNow Transfer"
-              subtitle="Acc No: 1234567890012"
-              isSelected={false}
-              showCopy
-            />
-
-            <PaymentOption
-              icon={
-                <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                  <div className="w-6 h-4 border-2 border-slate-400 rounded-sm" />
-                </div>
-              }
-              title="Virtual Bank"
-              subtitle="AFIN BANK · 0129324679"
-              isSelected={false}
-              showCopy
-            />
-
-            <PaymentOption
-              icon={
-                <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                  <div className="flex flex-col">
-                    <div className="w-6 h-1 bg-orange-500 rounded" />
-                    <div className="w-6 h-1 bg-green-500 rounded mt-0.5" />
-                    <div className="w-6 h-1 bg-red-500 rounded mt-0.5" />
-                  </div>
-                </div>
-              }
-              title="7-Eleven (OTC)"
-              isSelected={false}
-            />
-          </div>
-        </div>
+              </div>
+            )}
+          </>
+        )}
 
         {/* Info Note */}
-        {variant === 'saved-card' && (
+        {selectedMethod === 'savedCard' && (
           <div className="mt-6 p-3 bg-slate-50 rounded-lg">
             <p
               style={{
@@ -253,8 +370,7 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
                 lineHeight: 1.5,
               }}
             >
-              An extra RM1.00 will be charged based on your selected card type and
-              provider charge.
+              {withDefault(texts.reloadInfoNote, 'reloadInfoNote')}
             </p>
           </div>
         )}

@@ -10,6 +10,8 @@ import {
   TypographyScale,
   TypographyWeights,
   LayoutStyle,
+  ReloadMethodSettings,
+  ReloadMethodKey,
 } from '@/types';
 
 interface CustomizationStore {
@@ -43,6 +45,9 @@ interface CustomizationStore {
   // Home Screen Modules
   modules: ModuleVisibility;
 
+  // Reload Wallet Methods
+  reloadMethods: ReloadMethodSettings;
+
   // Export Settings
   selectedScreens: string[];
   includeDeviceFrame: boolean;
@@ -72,6 +77,8 @@ interface CustomizationStore {
   setHideBalance: (hide: boolean) => void;
   setText: <K extends keyof TextCustomizations>(key: K, value: string) => void;
   setModule: <K extends keyof ModuleVisibility>(key: K, visible: boolean) => void;
+  setReloadMethodEnabled: (key: ReloadMethodKey, enabled: boolean) => void;
+  setReloadMethodLogo: (key: ReloadMethodKey, logo: string | null) => void;
   setTypographyFontFamily: (font: FontFamily) => void;
   setTypographyScale: <K extends keyof TypographyScale>(key: K, value: number) => void;
   setTypographyWeight: <K extends keyof TypographyWeights>(key: K, value: number) => void;
@@ -146,6 +153,21 @@ const defaultTexts: TextCustomizations = {
   idTypeStep3Desc: 'Please take a selfie for ID verification.',
   idTypeButton: "Alright, let's do this",
   loadingText: 'Please wait...',
+
+  // Reload Wallet
+  reloadSelectTitle: 'Choose reload method',
+  reloadSavedOptionsLabel: 'SAVED OPTIONS',
+  reloadOtherOptionsLabel: 'OTHER OPTIONS',
+  reloadSavedCardTitle: 'Pay with Your Saved card',
+  reloadSavedCardSubtitle: 'VISA ending in 8908',
+  reloadOnlineBankingTitle: 'Pay with Online Banking',
+  reloadCreditCardTitle: 'Pay with Credit/Debit card',
+  reloadDuitNowTitle: 'DuitNow Transfer',
+  reloadDuitNowSubtitle: 'Acc No: 1234567890012',
+  reloadVirtualBankTitle: 'Virtual Bank',
+  reloadVirtualBankSubtitle: 'AFIN BANK · 0129324679',
+  reloadSevenElevenTitle: '7-Eleven (OTC)',
+  reloadInfoNote: 'An extra RM1.00 will be charged based on your selected card type and provider charge.',
 };
 
 const defaultModules: ModuleVisibility = {
@@ -155,6 +177,15 @@ const defaultModules: ModuleVisibility = {
   payBills: true,
   mobileReload: true,
   more: true,
+};
+
+const defaultReloadMethods: ReloadMethodSettings = {
+  savedCard: { enabled: true, logo: null },
+  onlineBanking: { enabled: true, logo: null },
+  creditCard: { enabled: true, logo: null },
+  duitNow: { enabled: true, logo: null },
+  virtualBank: { enabled: true, logo: null },
+  sevenEleven: { enabled: true, logo: null },
 };
 
 const defaultTypography: TypographySettings = {
@@ -202,11 +233,20 @@ const allScreenIds = [
   'kyc-success',
   'home',
   'home-hidden',
+  'home-reload-modal',
+  'reload-method',
+  'reload-method-saved',
+  'reload-method-banking',
+  'reload-method-card',
+  'reload-amount',
+  'reload-success',
+  'reload-failed',
+  'auto-reload',
 ];
 
 export const useCustomizationStore = create<CustomizationStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       // Branding
       logo: null,
       appName: 'kiple',
@@ -236,6 +276,9 @@ export const useCustomizationStore = create<CustomizationStore>()(
 
   // Modules
   modules: defaultModules,
+
+  // Reload methods
+  reloadMethods: defaultReloadMethods,
 
   // Export
   selectedScreens: allScreenIds,
@@ -271,6 +314,20 @@ export const useCustomizationStore = create<CustomizationStore>()(
   setModule: (key, visible) =>
     set((state) => ({
       modules: { ...state.modules, [key]: visible },
+    })),
+  setReloadMethodEnabled: (key, enabled) =>
+    set((state) => ({
+      reloadMethods: {
+        ...state.reloadMethods,
+        [key]: { ...state.reloadMethods[key], enabled },
+      },
+    })),
+  setReloadMethodLogo: (key, logo) =>
+    set((state) => ({
+      reloadMethods: {
+        ...state.reloadMethods,
+        [key]: { ...state.reloadMethods[key], logo },
+      },
     })),
   setTypographyFontFamily: (fontFamily) =>
     set((state) => ({
@@ -330,6 +387,7 @@ export const useCustomizationStore = create<CustomizationStore>()(
       hideBalance: false,
       texts: defaultTexts,
       modules: defaultModules,
+      reloadMethods: defaultReloadMethods,
       selectedScreens: allScreenIds,
       includeDeviceFrame: false,
       deviceType: 'iphone',
@@ -348,13 +406,13 @@ export const useCustomizationStore = create<CustomizationStore>()(
 
 // Font family map for CSS
 export const fontFamilyMap: Record<FontFamily, string> = {
-  inter: "var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif",
-  roboto: "var(--font-roboto), -apple-system, BlinkMacSystemFont, sans-serif",
-  poppins: "var(--font-poppins), -apple-system, BlinkMacSystemFont, sans-serif",
-  montserrat: "var(--font-montserrat), -apple-system, BlinkMacSystemFont, sans-serif",
-  opensans: "var(--font-opensans), -apple-system, BlinkMacSystemFont, sans-serif",
-  lato: "var(--font-lato), -apple-system, BlinkMacSystemFont, sans-serif",
-  nunito: "var(--font-nunito), -apple-system, BlinkMacSystemFont, sans-serif",
+  inter: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  roboto: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  poppins: "Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  montserrat: "Montserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  opensans: "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  lato: "Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  nunito: "Nunito, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 };
 
-export { allScreenIds, defaultTypography };
+export { allScreenIds, defaultTypography, defaultTexts };
