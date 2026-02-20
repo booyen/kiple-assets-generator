@@ -35,6 +35,7 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
     texts,
     modules,
     bannerImage,
+    setCurrentScreen,
   } = useCustomizationStore();
 
   const typography = useTypography();
@@ -73,7 +74,7 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
         {/* Header */}
         <div className="flex justify-between items-center px-6 py-3">
           <Logo logo={logo} appName={appName} primaryColor={primaryColor} size="sm" />
-          <button className="p-1">
+          <button className="p-1" onClick={() => setCurrentScreen('notification')}>
             <Bell size={22} style={{ color: textPrimaryColor }} />
           </button>
         </div>
@@ -98,6 +99,7 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
             </h1>
             <Info size={16} style={{ color: primaryColor }} />
             <button
+              onClick={() => setCurrentScreen('home-reload-modal')}
               className="w-5 h-5 rounded-full flex items-center justify-center"
               style={{ backgroundColor: primaryColor }}
             >
@@ -123,6 +125,14 @@ export function HomeScreen({ hideBalance = false }: HomeScreenProps) {
               return (
                 <button
                   key={moduleKey}
+                  onClick={() => {
+                    if (moduleKey === 'transfer') setCurrentScreen('transfer-start');
+                    if (moduleKey === 'remittance') setCurrentScreen('history');
+                    if (moduleKey === 'visa') setCurrentScreen('visa-home');
+                    if (moduleKey === 'payBills') setCurrentScreen('insurance-home');
+                    if (moduleKey === 'mobileReload') setCurrentScreen('reload-method');
+                    if (moduleKey === 'more') setCurrentScreen('scanpay-scan');
+                  }}
                   className="flex flex-col items-center gap-2"
                 >
                   <div

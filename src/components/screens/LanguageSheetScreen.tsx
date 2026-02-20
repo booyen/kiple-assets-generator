@@ -5,7 +5,7 @@ import { StatusBar } from './shared/StatusBar';
 import { Check } from 'lucide-react';
 
 export function LanguageSheetScreen() {
-  const { primaryColor, backgroundColor, textPrimaryColor } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textPrimaryColor, setCurrentScreen } = useCustomizationStore();
 
   const languages = [
     { code: 'en', name: 'English (UK)', flag: '🇬🇧', selected: true },
@@ -57,6 +57,7 @@ export function LanguageSheetScreen() {
         </div>
 
         <button
+          onClick={() => setCurrentScreen('login')}
           className="w-full py-4 mt-6 rounded-full text-base font-semibold text-white"
           style={{ backgroundColor: primaryColor }}
         >

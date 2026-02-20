@@ -8,7 +8,7 @@ interface RegistrationSuccessScreenProps {
 }
 
 export function RegistrationSuccessScreen({ variant = 'default' }: RegistrationSuccessScreenProps) {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts, setCurrentScreen } = useCustomizationStore();
 
   return (
     <div
@@ -39,6 +39,7 @@ export function RegistrationSuccessScreen({ variant = 'default' }: RegistrationS
 
       {/* Button */}
       <button
+        onClick={() => setCurrentScreen('biometric-setup')}
         className="w-full py-4 rounded-full text-base font-semibold text-white"
         style={{ backgroundColor: primaryColor }}
       >
@@ -47,6 +48,7 @@ export function RegistrationSuccessScreen({ variant = 'default' }: RegistrationS
 
       {variant === 'alt' && (
         <button
+          onClick={() => setCurrentScreen('biometric-setup')}
           className="mt-4 text-sm font-medium"
           style={{ color: primaryColor }}
         >

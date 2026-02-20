@@ -3,8 +3,10 @@
 import { SplashScreen } from './SplashScreen';
 import { OnboardingScreen } from './OnboardingScreen';
 import { LoginScreen } from './LoginScreen';
+import { SignupScreen } from './SignupScreen';
 import { HomeScreen } from './HomeScreen';
 import { BiometricScreen } from './BiometricScreen';
+import { BiometricSetupScreen } from './BiometricSetupScreen';
 import { AuthMethodScreen } from './AuthMethodScreen';
 import { RegistrationSuccessScreen } from './RegistrationSuccessScreen';
 import { LanguageSheetScreen } from './LanguageSheetScreen';
@@ -18,11 +20,18 @@ import { ReloadAmountModal } from './ReloadAmountModal';
 import { ReloadReceiptScreen } from './ReloadReceiptScreen';
 import { AutoReloadScreen } from './AutoReloadScreen';
 import { HomeWithReloadModal } from './HomeWithReloadModal';
+import { NotificationsScreen } from './NotificationsScreen';
+import { HistoryScreen } from './HistoryScreen';
+import { TransferScreen } from './TransferScreen';
+import { VisaScreen } from './VisaScreen';
+import { InsuranceScreen } from './InsuranceScreen';
+import { ScanPayScreen } from './ScanPayScreen';
+import { ScreenCategory } from '@/types';
 
 export interface ScreenInfo {
   id: string;
   name: string;
-  category: 'splash' | 'onboarding' | 'auth' | 'ekyc' | 'home' | 'reload';
+  category: ScreenCategory;
   component: React.ComponentType;
 }
 
@@ -39,11 +48,13 @@ export const screens: ScreenInfo[] = [
 
   // Auth
   { id: 'login', name: 'Login', category: 'auth', component: () => <LoginScreen variant="default" /> },
+  { id: 'signup', name: 'Sign Up', category: 'auth', component: SignupScreen },
   { id: 'login-phone-focus', name: 'Login (Phone)', category: 'auth', component: () => <LoginScreen variant="phone-focus" /> },
   { id: 'login-password-focus', name: 'Login (Password)', category: 'auth', component: () => <LoginScreen variant="password-focus" /> },
   { id: 'language-sheet', name: 'Language Sheet', category: 'auth', component: LanguageSheetScreen },
   { id: 'touch-id', name: 'Touch ID', category: 'auth', component: () => <BiometricScreen type="touch" /> },
   { id: 'face-id', name: 'Face ID', category: 'auth', component: () => <BiometricScreen type="face" /> },
+  { id: 'biometric-setup', name: 'Biometric Setup', category: 'auth', component: BiometricSetupScreen },
   { id: 'choose-auth', name: 'Choose Auth', category: 'auth', component: AuthMethodScreen },
   { id: 'registration-success', name: 'Registration Success', category: 'auth', component: () => <RegistrationSuccessScreen variant="default" /> },
   { id: 'registration-success-alt', name: 'Registration Success (Alt)', category: 'auth', component: () => <RegistrationSuccessScreen variant="alt" /> },
@@ -71,6 +82,49 @@ export const screens: ScreenInfo[] = [
   { id: 'reload-success', name: 'Reload Success', category: 'reload', component: () => <ReloadReceiptScreen variant="success" /> },
   { id: 'reload-failed', name: 'Reload Failed', category: 'reload', component: () => <ReloadReceiptScreen variant="failed" /> },
   { id: 'auto-reload', name: 'Auto-Reload', category: 'reload', component: AutoReloadScreen },
+
+  // Notifications
+  { id: 'notification', name: 'Notifications', category: 'notifications', component: () => <NotificationsScreen variant="default" /> },
+  { id: 'notification-empty', name: 'Notifications (Empty)', category: 'notifications', component: () => <NotificationsScreen variant="empty" /> },
+  { id: 'notification-permission', name: 'Notifications (Permission)', category: 'notifications', component: () => <NotificationsScreen variant="permission" /> },
+
+  // History
+  { id: 'history', name: 'History', category: 'history', component: () => <HistoryScreen variant="list" /> },
+  { id: 'history-ptptn', name: 'History - PTPTN Receipt', category: 'history', component: () => <HistoryScreen variant="ptptn" /> },
+  { id: 'history-sspn', name: 'History - SSPN Receipt', category: 'history', component: () => <HistoryScreen variant="sspn" /> },
+  { id: 'history-reload-success', name: 'History - Reload Success', category: 'history', component: () => <HistoryScreen variant="reload-success" /> },
+  { id: 'history-reload-failed', name: 'History - Reload Failed', category: 'history', component: () => <HistoryScreen variant="reload-failed" /> },
+
+  // Transfer
+  { id: 'transfer-start', name: 'Transfer - Start', category: 'transfer', component: () => <TransferScreen variant="start" /> },
+  { id: 'transfer-favorite', name: 'Transfer - Favorite', category: 'transfer', component: () => <TransferScreen variant="favorite" /> },
+  { id: 'transfer-duitnow', name: 'Transfer - DuitNow', category: 'transfer', component: () => <TransferScreen variant="duitnow" /> },
+  { id: 'transfer-amount', name: 'Transfer - Enter Amount', category: 'transfer', component: () => <TransferScreen variant="amount" /> },
+  { id: 'transfer-confirm', name: 'Transfer - Confirm', category: 'transfer', component: () => <TransferScreen variant="confirm" /> },
+  { id: 'transfer-success', name: 'Transfer - Success', category: 'transfer', component: () => <TransferScreen variant="success" /> },
+  { id: 'transfer-show-card', name: 'Transfer - Show Card Details', category: 'transfer', component: () => <TransferScreen variant="show-card" /> },
+
+  // VISA
+  { id: 'visa-home', name: 'VISA - Home', category: 'visa', component: () => <VisaScreen variant="home" /> },
+  { id: 'visa-application', name: 'VISA - Application', category: 'visa', component: () => <VisaScreen variant="application" /> },
+  { id: 'visa-confirm-pin', name: 'VISA - Confirm Pin', category: 'visa', component: () => <VisaScreen variant="confirm-pin" /> },
+  { id: 'visa-card-front', name: 'VISA - Card Front', category: 'visa', component: () => <VisaScreen variant="card-front" /> },
+  { id: 'visa-application-success', name: 'VISA - Application Success', category: 'visa', component: () => <VisaScreen variant="application-success" /> },
+  { id: 'visa-reload', name: 'VISA - Reload', category: 'visa', component: () => <VisaScreen variant="reload" /> },
+
+  // Insurances
+  { id: 'insurance-home', name: 'Insurances - Home', category: 'insurance', component: () => <InsuranceScreen variant="home" /> },
+  { id: 'insurance-details', name: 'Insurances - Details', category: 'insurance', component: () => <InsuranceScreen variant="details" /> },
+  { id: 'insurance-policy', name: 'Insurances - My Policy', category: 'insurance', component: () => <InsuranceScreen variant="policy" /> },
+  { id: 'insurance-success', name: 'Insurances - Success Receipt', category: 'insurance', component: () => <InsuranceScreen variant="success" /> },
+  { id: 'insurance-failed', name: 'Insurances - Failed Receipt', category: 'insurance', component: () => <InsuranceScreen variant="failed" /> },
+
+  // Scan & Pay
+  { id: 'scanpay-scan', name: 'Scan & Pay - Scan', category: 'scanpay', component: () => <ScanPayScreen variant="scan" /> },
+  { id: 'scanpay-enter-amount', name: 'Scan & Pay - Enter Amount', category: 'scanpay', component: () => <ScanPayScreen variant="enter-amount" /> },
+  { id: 'scanpay-confirm-pin', name: 'Scan & Pay - Confirm Pin', category: 'scanpay', component: () => <ScanPayScreen variant="confirm-pin" /> },
+  { id: 'scanpay-success', name: 'Scan & Pay - Success', category: 'scanpay', component: () => <ScanPayScreen variant="success" /> },
+  { id: 'scanpay-failed', name: 'Scan & Pay - Failed', category: 'scanpay', component: () => <ScanPayScreen variant="failed" /> },
 ];
 
 export function getScreenById(id: string): ScreenInfo | undefined {
@@ -93,8 +147,10 @@ export {
   SplashScreen,
   OnboardingScreen,
   LoginScreen,
+  SignupScreen,
   HomeScreen,
   BiometricScreen,
+  BiometricSetupScreen,
   AuthMethodScreen,
   RegistrationSuccessScreen,
   LanguageSheetScreen,
@@ -108,4 +164,10 @@ export {
   ReloadReceiptScreen,
   AutoReloadScreen,
   HomeWithReloadModal,
+  NotificationsScreen,
+  HistoryScreen,
+  TransferScreen,
+  VisaScreen,
+  InsuranceScreen,
+  ScanPayScreen,
 };

@@ -55,6 +55,7 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
     balanceAmount,
     texts,
     modules,
+    setCurrentScreen,
   } = useCustomizationStore();
 
   const typography = useTypography();
@@ -72,7 +73,7 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
     .filter(([, visible]) => visible)
     .map(([key]) => key as keyof typeof moduleIcons);
 
-  const selectedAmount = '100.00';
+  const selectedAmount = '150.00';
   const quickAmounts = ['20', '50', '100', '150'];
   const selectedQuick = '150';
 
@@ -90,7 +91,7 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
           {/* Header */}
           <div className="flex justify-between items-center px-6 py-3">
             <Logo logo={logo} appName={appName} primaryColor={primaryColor} size="sm" />
-            <button className="p-1">
+            <button className="p-1" onClick={() => setCurrentScreen('notification')}>
               <Bell size={22} style={{ color: textPrimaryColor }} />
             </button>
           </div>
@@ -131,7 +132,18 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
               {activeModules.slice(0, 6).map((moduleKey) => {
                 const iconOrText = moduleIcons[moduleKey];
                 return (
-                  <button key={moduleKey} className="flex flex-col items-center gap-2">
+                  <button
+                    key={moduleKey}
+                    onClick={() => {
+                      if (moduleKey === 'transfer') setCurrentScreen('transfer-start');
+                      if (moduleKey === 'remittance') setCurrentScreen('history');
+                      if (moduleKey === 'visa') setCurrentScreen('visa-home');
+                      if (moduleKey === 'payBills') setCurrentScreen('insurance-home');
+                      if (moduleKey === 'mobileReload') setCurrentScreen('reload-method');
+                      if (moduleKey === 'more') setCurrentScreen('scanpay-scan');
+                    }}
+                    className="flex flex-col items-center gap-2"
+                  >
                     <div
                       className="w-12 h-12 rounded-xl flex items-center justify-center"
                       style={{ backgroundColor: '#F1F5F9' }}
@@ -163,7 +175,7 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
           <div className="flex flex-col h-full">
             {/* Header */}
             <div className="px-6 pt-6 pb-4">
-              <button className="mb-4">
+              <button className="mb-4" onClick={() => setCurrentScreen('home')}>
                 <X size={24} style={{ color: textPrimaryColor }} />
               </button>
 
@@ -277,6 +289,7 @@ export function HomeWithReloadModal({ hideBalance = false }: HomeWithReloadModal
 
               {/* Add Money Button */}
               <button
+                onClick={() => setCurrentScreen('reload-success')}
                 className="w-full py-4 rounded-xl text-white font-semibold"
                 style={{
                   backgroundColor: primaryColor,

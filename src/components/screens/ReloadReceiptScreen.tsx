@@ -57,6 +57,7 @@ export function ReloadReceiptScreen({ variant }: ReloadReceiptScreenProps) {
     textPrimaryColor,
     textSecondaryColor,
     currencySymbol,
+    setCurrentScreen,
   } = useCustomizationStore();
 
   const typography = useTypography();
@@ -67,7 +68,15 @@ export function ReloadReceiptScreen({ variant }: ReloadReceiptScreenProps) {
 
   return (
     <div className="mobile-screen flex flex-col bg-white">
-      <div className="flex-1 overflow-auto px-6 pt-12 pb-6">
+      <div className="px-6 py-4 flex items-center gap-3 relative z-10">
+        <button
+          onClick={() => setCurrentScreen('home')}
+          className="w-9 h-9 rounded-lg flex items-center justify-center bg-slate-100/50"
+        >
+          <XIcon size={20} className="text-slate-600" />
+        </button>
+      </div>
+      <div className="flex-1 overflow-auto px-6 pt-4 pb-6">
         {/* Status Icon */}
         <div className="flex justify-center mb-6">
           <div
@@ -150,6 +159,7 @@ export function ReloadReceiptScreen({ variant }: ReloadReceiptScreenProps) {
       <div className="px-6 pb-6 space-y-3">
         {/* Secondary Button */}
         <button
+          onClick={() => setCurrentScreen('reload-amount')}
           className="w-full py-4 rounded-xl font-semibold border-2"
           style={{
             borderColor: primaryColor,
@@ -164,6 +174,7 @@ export function ReloadReceiptScreen({ variant }: ReloadReceiptScreenProps) {
 
         {/* Primary Button */}
         <button
+          onClick={() => setCurrentScreen('home')}
           className="w-full py-4 rounded-xl text-white font-semibold"
           style={{
             backgroundColor: primaryColor,

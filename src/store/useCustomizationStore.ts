@@ -9,10 +9,27 @@ import {
   FontFamily,
   TypographyScale,
   TypographyWeights,
-  LayoutStyle,
   ReloadMethodSettings,
   ReloadMethodKey,
 } from '@/types';
+
+export type ThemePresetId = 'kiple-default' | 'ocean-fresh' | 'forest-pay' | 'sunset-pop';
+
+interface ThemePreset {
+  id: ThemePresetId;
+  name: string;
+  description: string;
+  swatches: [string, string, string];
+  colors: {
+    primaryColor: string;
+    secondaryColor: string;
+    accentColor: string;
+    backgroundColor: string;
+    textPrimaryColor: string;
+    textSecondaryColor: string;
+  };
+  typography: TypographySettings;
+}
 
 interface CustomizationStore {
   // Branding
@@ -30,6 +47,7 @@ interface CustomizationStore {
 
   // Typography
   typography: TypographySettings;
+  themePreset: ThemePresetId | 'custom';
 
   // Currency
   currencyCode: string;
@@ -58,9 +76,6 @@ interface CustomizationStore {
   // Current preview screen
   currentScreen: string;
 
-  // Layout style
-  layoutStyle: LayoutStyle;
-
   // Actions
   setLogo: (logo: string | null) => void;
   setAppName: (name: string) => void;
@@ -84,6 +99,7 @@ interface CustomizationStore {
   setTypographyWeight: <K extends keyof TypographyWeights>(key: K, value: number) => void;
   setTypographyLineHeight: (value: number) => void;
   setTypographyLetterSpacing: (value: number) => void;
+  applyThemePreset: (presetId: ThemePresetId) => void;
   toggleScreen: (screenId: string) => void;
   selectAllScreens: () => void;
   deselectAllScreens: () => void;
@@ -92,7 +108,6 @@ interface CustomizationStore {
   setExportFormat: (format: ExportFormat) => void;
   setExportQuality: (quality: number) => void;
   setCurrentScreen: (screenId: string) => void;
-  setLayoutStyle: (style: LayoutStyle) => void;
   resetToDefaults: () => void;
 }
 
@@ -208,6 +223,125 @@ const defaultTypography: TypographySettings = {
   letterSpacing: 0,
 };
 
+export const themePresets: Record<ThemePresetId, ThemePreset> = {
+  'kiple-default': {
+    id: 'kiple-default',
+    name: 'Kiple Default',
+    description: 'Clean blue primary with balanced modern typography.',
+    swatches: ['#2D4EF5', '#1A1A2E', '#F5D0C5'],
+    colors: {
+      primaryColor: '#2D4EF5',
+      secondaryColor: '#1A1A2E',
+      accentColor: '#F5D0C5',
+      backgroundColor: '#FFFFFF',
+      textPrimaryColor: '#1A1A2E',
+      textSecondaryColor: '#6B7280',
+    },
+    typography: defaultTypography,
+  },
+  'ocean-fresh': {
+    id: 'ocean-fresh',
+    name: 'Ocean Fresh',
+    description: 'Teal-forward palette with calm, friendly readability.',
+    swatches: ['#0EA5A4', '#0F172A', '#99F6E4'],
+    colors: {
+      primaryColor: '#0EA5A4',
+      secondaryColor: '#0F172A',
+      accentColor: '#99F6E4',
+      backgroundColor: '#F8FAFC',
+      textPrimaryColor: '#0F172A',
+      textSecondaryColor: '#475569',
+    },
+    typography: {
+      fontFamily: 'nunito',
+      scale: {
+        h1: 31,
+        h2: 23,
+        h3: 18,
+        body: 16,
+        small: 14,
+        caption: 12,
+      },
+      weights: {
+        heading: 700,
+        subheading: 600,
+        body: 400,
+        caption: 500,
+      },
+      lineHeight: 1.5,
+      letterSpacing: 0,
+    },
+  },
+  'forest-pay': {
+    id: 'forest-pay',
+    name: 'Greenpacket',
+    description: 'Professional green identity with strong contrast.',
+    swatches: ['#166534', '#052E16', '#BBF7D0'],
+    colors: {
+      primaryColor: '#166534',
+      secondaryColor: '#052E16',
+      accentColor: '#BBF7D0',
+      backgroundColor: '#F7FDF9',
+      textPrimaryColor: '#14532D',
+      textSecondaryColor: '#4B5563',
+    },
+    typography: {
+      fontFamily: 'opensans',
+      scale: {
+        h1: 31,
+        h2: 23,
+        h3: 18,
+        body: 16,
+        small: 14,
+        caption: 12,
+      },
+      weights: {
+        heading: 700,
+        subheading: 600,
+        body: 400,
+        caption: 500,
+      },
+      lineHeight: 1.5,
+      letterSpacing: 0,
+    },
+  },
+  'sunset-pop': {
+    id: 'sunset-pop',
+    name: 'Sunset Pop',
+    description: 'Warm energetic palette for promo-heavy campaigns.',
+    swatches: ['#EA580C', '#7C2D12', '#FED7AA'],
+    colors: {
+      primaryColor: '#EA580C',
+      secondaryColor: '#7C2D12',
+      accentColor: '#FED7AA',
+      backgroundColor: '#FFF8F3',
+      textPrimaryColor: '#7C2D12',
+      textSecondaryColor: '#78716C',
+    },
+    typography: {
+      fontFamily: 'poppins',
+      scale: {
+        h1: 32,
+        h2: 24,
+        h3: 18,
+        body: 16,
+        small: 14,
+        caption: 12,
+      },
+      weights: {
+        heading: 700,
+        subheading: 600,
+        body: 400,
+        caption: 500,
+      },
+      lineHeight: 1.48,
+      letterSpacing: 0.01,
+    },
+  },
+};
+
+export const themePresetList = Object.values(themePresets);
+
 const allScreenIds = [
   'splash',
   'onboarding-1',
@@ -216,11 +350,13 @@ const allScreenIds = [
   'onboarding-4',
   'onboarding-5',
   'login',
+  'signup',
   'login-phone-focus',
   'login-password-focus',
   'language-sheet',
   'touch-id',
   'face-id',
+  'biometric-setup',
   'choose-auth',
   'registration-success',
   'registration-success-alt',
@@ -242,6 +378,37 @@ const allScreenIds = [
   'reload-success',
   'reload-failed',
   'auto-reload',
+  'notification',
+  'notification-empty',
+  'notification-permission',
+  'history',
+  'history-ptptn',
+  'history-sspn',
+  'history-reload-success',
+  'history-reload-failed',
+  'transfer-start',
+  'transfer-favorite',
+  'transfer-duitnow',
+  'transfer-amount',
+  'transfer-confirm',
+  'transfer-success',
+  'transfer-show-card',
+  'visa-home',
+  'visa-application',
+  'visa-confirm-pin',
+  'visa-card-front',
+  'visa-application-success',
+  'visa-reload',
+  'insurance-home',
+  'insurance-details',
+  'insurance-policy',
+  'insurance-success',
+  'insurance-failed',
+  'scanpay-scan',
+  'scanpay-enter-amount',
+  'scanpay-confirm-pin',
+  'scanpay-success',
+  'scanpay-failed',
 ];
 
 export const useCustomizationStore = create<CustomizationStore>()(
@@ -262,6 +429,7 @@ export const useCustomizationStore = create<CustomizationStore>()(
 
   // Typography
   typography: defaultTypography,
+  themePreset: 'kiple-default',
 
   // Currency
   currencyCode: 'MYR',
@@ -290,19 +458,16 @@ export const useCustomizationStore = create<CustomizationStore>()(
   // Preview
   currentScreen: 'splash',
 
-  // Layout style
-  layoutStyle: 'minimal',
-
   // Actions
   setLogo: (logo) => set({ logo }),
   setAppName: (appName) => set({ appName }),
   setBannerImage: (bannerImage) => set({ bannerImage }),
-  setPrimaryColor: (primaryColor) => set({ primaryColor }),
-  setSecondaryColor: (secondaryColor) => set({ secondaryColor }),
-  setAccentColor: (accentColor) => set({ accentColor }),
-  setBackgroundColor: (backgroundColor) => set({ backgroundColor }),
-  setTextPrimaryColor: (textPrimaryColor) => set({ textPrimaryColor }),
-  setTextSecondaryColor: (textSecondaryColor) => set({ textSecondaryColor }),
+  setPrimaryColor: (primaryColor) => set({ primaryColor, themePreset: 'custom' }),
+  setSecondaryColor: (secondaryColor) => set({ secondaryColor, themePreset: 'custom' }),
+  setAccentColor: (accentColor) => set({ accentColor, themePreset: 'custom' }),
+  setBackgroundColor: (backgroundColor) => set({ backgroundColor, themePreset: 'custom' }),
+  setTextPrimaryColor: (textPrimaryColor) => set({ textPrimaryColor, themePreset: 'custom' }),
+  setTextSecondaryColor: (textSecondaryColor) => set({ textSecondaryColor, themePreset: 'custom' }),
   setCurrencyCode: (currencyCode) => set({ currencyCode }),
   setCurrencySymbol: (currencySymbol) => set({ currencySymbol }),
   setBalanceAmount: (balanceAmount) => set({ balanceAmount }),
@@ -331,10 +496,12 @@ export const useCustomizationStore = create<CustomizationStore>()(
     })),
   setTypographyFontFamily: (fontFamily) =>
     set((state) => ({
+      themePreset: 'custom',
       typography: { ...state.typography, fontFamily },
     })),
   setTypographyScale: (key, value) =>
     set((state) => ({
+      themePreset: 'custom',
       typography: {
         ...state.typography,
         scale: { ...state.typography.scale, [key]: value },
@@ -342,6 +509,7 @@ export const useCustomizationStore = create<CustomizationStore>()(
     })),
   setTypographyWeight: (key, value) =>
     set((state) => ({
+      themePreset: 'custom',
       typography: {
         ...state.typography,
         weights: { ...state.typography.weights, [key]: value },
@@ -349,12 +517,27 @@ export const useCustomizationStore = create<CustomizationStore>()(
     })),
   setTypographyLineHeight: (lineHeight) =>
     set((state) => ({
+      themePreset: 'custom',
       typography: { ...state.typography, lineHeight },
     })),
   setTypographyLetterSpacing: (letterSpacing) =>
     set((state) => ({
+      themePreset: 'custom',
       typography: { ...state.typography, letterSpacing },
     })),
+  applyThemePreset: (presetId) =>
+    set(() => {
+      const preset = themePresets[presetId];
+      return {
+        ...preset.colors,
+        themePreset: presetId,
+        typography: {
+          ...preset.typography,
+          scale: { ...preset.typography.scale },
+          weights: { ...preset.typography.weights },
+        },
+      };
+    }),
   toggleScreen: (screenId) =>
     set((state) => ({
       selectedScreens: state.selectedScreens.includes(screenId)
@@ -368,7 +551,6 @@ export const useCustomizationStore = create<CustomizationStore>()(
   setExportFormat: (exportFormat) => set({ exportFormat }),
   setExportQuality: (exportQuality) => set({ exportQuality }),
   setCurrentScreen: (currentScreen) => set({ currentScreen }),
-  setLayoutStyle: (layoutStyle) => set({ layoutStyle }),
   resetToDefaults: () =>
     set({
       logo: null,
@@ -381,6 +563,7 @@ export const useCustomizationStore = create<CustomizationStore>()(
       textPrimaryColor: '#1A1A2E',
       textSecondaryColor: '#6B7280',
       typography: defaultTypography,
+      themePreset: 'kiple-default',
       currencyCode: 'MYR',
       currencySymbol: 'RM',
       balanceAmount: '1,238.00',
@@ -394,7 +577,6 @@ export const useCustomizationStore = create<CustomizationStore>()(
       exportFormat: 'png',
       exportQuality: 0.9,
       currentScreen: 'splash',
-      layoutStyle: 'minimal',
     }),
     }),
     {

@@ -8,7 +8,7 @@ interface OnboardingScreenProps {
 }
 
 export function OnboardingScreen({ variant }: OnboardingScreenProps) {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts, setCurrentScreen } = useCustomizationStore();
   const typography = useTypography();
 
   const content: Record<number, { title: string; desc: string }> = {
@@ -74,13 +74,15 @@ export function OnboardingScreen({ variant }: OnboardingScreenProps) {
         {/* Dots */}
         <div className="flex justify-center gap-2 mt-8 mb-8">
           {dots.map((dot) => (
-            <div
+            <button
               key={dot}
-              className={`w-2 h-2 rounded-full transition-all ${
+              onClick={() => setCurrentScreen(`onboarding-${dot}`)}
+              className={`h-2 rounded-full transition-all ${
                 dot === variant ? 'w-6' : ''
               }`}
               style={{
                 backgroundColor: dot === variant ? primaryColor : '#E5E7EB',
+                width: dot === variant ? '24px' : '8px',
               }}
             />
           ))}
@@ -89,12 +91,14 @@ export function OnboardingScreen({ variant }: OnboardingScreenProps) {
         {/* Buttons */}
         <div className="flex gap-0">
           <button
+            onClick={() => setCurrentScreen('login')}
             className="flex-1 py-4"
             style={{ ...typography.button, color: primaryColor }}
           >
             Login
           </button>
           <button
+            onClick={() => setCurrentScreen('signup')}
             className="flex-1 py-4 text-white rounded-tr-3xl rounded-br-3xl"
             style={{ ...typography.button, backgroundColor: primaryColor }}
           >

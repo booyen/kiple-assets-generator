@@ -37,6 +37,7 @@ export function ReloadAmountModal({ selectedAmount = '100.00' }: ReloadAmountMod
     textSecondaryColor,
     currencySymbol,
     balanceAmount,
+    setCurrentScreen,
   } = useCustomizationStore();
 
   const typography = useTypography();
@@ -48,7 +49,7 @@ export function ReloadAmountModal({ selectedAmount = '100.00' }: ReloadAmountMod
     <div className="mobile-screen flex flex-col bg-white">
       {/* Header */}
       <div className="px-6 pt-6 pb-4">
-        <button className="mb-4">
+        <button className="mb-4" onClick={() => setCurrentScreen('reload-method')}>
           <X size={24} style={{ color: textPrimaryColor }} />
         </button>
 
@@ -161,6 +162,7 @@ export function ReloadAmountModal({ selectedAmount = '100.00' }: ReloadAmountMod
 
         {/* Add Money Button */}
         <button
+          onClick={() => setCurrentScreen('reload-success')}
           className="w-full py-4 rounded-xl text-white font-semibold"
           style={{
             backgroundColor: primaryColor,

@@ -5,7 +5,7 @@ import { StatusBar } from './shared/StatusBar';
 import { Fingerprint, ScanFace, KeyRound } from 'lucide-react';
 
 export function AuthMethodScreen() {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts, setCurrentScreen } = useCustomizationStore();
 
   const methods = [
     { icon: Fingerprint, label: 'Touch ID', desc: 'Use your fingerprint' },
@@ -34,6 +34,7 @@ export function AuthMethodScreen() {
             return (
               <button
                 key={index}
+                onClick={() => setCurrentScreen(index === 0 ? 'touch-id' : index === 1 ? 'face-id' : 'home')}
                 className="w-full flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-slate-300 transition-colors"
               >
                 <div

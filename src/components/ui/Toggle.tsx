@@ -1,5 +1,8 @@
 'use client';
 
+import { Switch } from './switch';
+import { Label } from './label';
+
 interface ToggleProps {
   label: string;
   checked: boolean;
@@ -9,32 +12,16 @@ interface ToggleProps {
 
 export function Toggle({ label, checked, onChange, description }: ToggleProps) {
   return (
-    <label className="flex items-center justify-between cursor-pointer group">
-      <div className="flex-1">
-        <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">
+    <div className="flex items-center justify-between space-x-2">
+      <div className="flex-1 space-y-0.5">
+        <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           {label}
-        </span>
+        </Label>
         {description && (
-          <p className="text-xs text-slate-500">{description}</p>
+          <p className="text-[11px] text-muted-foreground">{description}</p>
         )}
       </div>
-      <button
-        type="button"
-        role="switch"
-        aria-checked={checked}
-        onClick={() => onChange(!checked)}
-        className={`
-          relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-          ${checked ? 'bg-blue-600' : 'bg-slate-300'}
-        `}
-      >
-        <span
-          className={`
-            inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform
-            ${checked ? 'translate-x-6' : 'translate-x-1'}
-          `}
-        />
-      </button>
-    </label>
+      <Switch checked={checked} onCheckedChange={onChange} />
+    </div>
   );
 }

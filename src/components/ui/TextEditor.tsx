@@ -108,23 +108,23 @@ export function TextEditor() {
         const isExpanded = expandedSections.includes(section.id);
 
         return (
-          <div key={section.id} className="border border-slate-200 rounded-lg overflow-hidden">
+          <div key={section.id} className="border border-border rounded-lg overflow-hidden bg-card text-card-foreground">
             <button
               onClick={() => toggleSection(section.id)}
-              className="w-full flex items-center justify-between px-3 py-2 bg-slate-50 hover:bg-slate-100 transition-colors"
+              className="w-full flex items-center justify-between px-3 py-2 bg-muted/30 hover:bg-muted/50 transition-colors"
             >
-              <span className="text-sm font-medium text-slate-700">
+              <span className="text-sm font-medium text-foreground">
                 {section.label}
               </span>
               {isExpanded ? (
-                <ChevronDown size={16} className="text-slate-500" />
+                <ChevronDown size={16} className="text-muted-foreground" />
               ) : (
-                <ChevronRight size={16} className="text-slate-500" />
+                <ChevronRight size={16} className="text-muted-foreground" />
               )}
             </button>
 
             {isExpanded && (
-              <div className="p-3 space-y-3 bg-white">
+              <div className="p-3 space-y-3 bg-card border-t border-border">
                 {section.fields.map((field) => (
                   <TextInput
                     key={field.key}

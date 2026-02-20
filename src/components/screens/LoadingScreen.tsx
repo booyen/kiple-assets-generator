@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useCustomizationStore } from '@/store/useCustomizationStore';
 
 interface LoadingScreenProps {
@@ -7,7 +8,14 @@ interface LoadingScreenProps {
 }
 
 export function LoadingScreen({ variant = 'default' }: LoadingScreenProps) {
-  const { primaryColor, backgroundColor, textSecondaryColor, texts } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textSecondaryColor, texts, setCurrentScreen } = useCustomizationStore();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCurrentScreen('kyc-success');
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [setCurrentScreen, variant]);
 
   return (
     <div

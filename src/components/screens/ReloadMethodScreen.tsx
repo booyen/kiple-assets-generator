@@ -21,6 +21,7 @@ interface PaymentOptionProps {
   textPrimaryColor: string;
   textSecondaryColor: string;
   typography: TypographyStyles;
+  onSelect?: () => void;
 }
 
 function PaymentOption({
@@ -33,14 +34,17 @@ function PaymentOption({
   textPrimaryColor,
   textSecondaryColor,
   typography,
+  onSelect,
 }: PaymentOptionProps) {
   return (
     <div
+      onClick={onSelect}
       className={`bg-white rounded-xl p-4 flex items-center gap-3 ${
         isSelected ? 'border-2' : 'border border-slate-200'
       }`}
       style={{
         borderColor: isSelected ? primaryColor : undefined,
+        cursor: onSelect ? 'pointer' : 'default',
       }}
     >
       <div className="flex-shrink-0">{icon}</div>
@@ -157,6 +161,7 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
     currencySymbol,
     texts,
     reloadMethods,
+    setCurrentScreen,
   } = useCustomizationStore();
 
   const typography = useTypography();
@@ -174,6 +179,14 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
   };
   const variantMethod = variantMap[variant];
   const selectedMethod = variantMethod && reloadMethods[variantMethod].enabled ? variantMethod : null;
+  const methodScreenMap: Record<ReloadMethodKey, string> = {
+    savedCard: 'reload-method-saved',
+    onlineBanking: 'reload-method-banking',
+    creditCard: 'reload-method-card',
+    duitNow: 'reload-method',
+    virtualBank: 'auto-reload',
+    sevenEleven: 'reload-method',
+  };
 
   const allOptions: {
     key: ReloadMethodKey;
@@ -229,7 +242,7 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
 
       {/* Header */}
       <div className="bg-white px-6 py-4 flex items-center justify-between border-b border-slate-100">
-        <button className="p-1">
+        <button className="p-1" onClick={() => setCurrentScreen('home')}>
           <ArrowLeft size={24} style={{ color: textPrimaryColor }} />
         </button>
         <div className="text-right">
@@ -311,6 +324,7 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
                       textPrimaryColor={textPrimaryColor}
                       textSecondaryColor={textSecondaryColor}
                       typography={typography}
+                      onSelect={() => setCurrentScreen(methodScreenMap[option.key])}
                     />
                   ))}
                 </div>
@@ -351,6 +365,7 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
                       textPrimaryColor={textPrimaryColor}
                       textSecondaryColor={textSecondaryColor}
                       typography={typography}
+                      onSelect={() => setCurrentScreen(methodScreenMap[option.key])}
                     />
                   ))}
                 </div>
@@ -379,6 +394,7 @@ export function ReloadMethodScreen({ variant = 'default' }: ReloadMethodScreenPr
       {/* Bottom Button */}
       <div className="px-6 py-4 bg-white border-t border-slate-100">
         <button
+          onClick={() => setCurrentScreen(selectedMethod === 'virtualBank' ? 'auto-reload' : 'reload-amount')}
           className="w-full py-4 rounded-xl text-white font-semibold"
           style={{
             backgroundColor: primaryColor,

@@ -19,6 +19,7 @@ export function LoginScreen({ variant = 'default' }: LoginScreenProps) {
     textPrimaryColor,
     textSecondaryColor,
     texts,
+    setCurrentScreen,
   } = useCustomizationStore();
 
   const typography = useTypography();
@@ -36,6 +37,7 @@ export function LoginScreen({ variant = 'default' }: LoginScreenProps) {
       {/* Language selector */}
       <div className="flex justify-end px-6 py-2">
         <button
+          onClick={() => setCurrentScreen('language-sheet')}
           className="flex items-center gap-1 px-3 py-1.5 border border-slate-200 rounded-full"
           style={typography.small}
         >
@@ -66,10 +68,11 @@ export function LoginScreen({ variant = 'default' }: LoginScreenProps) {
 
         {/* Phone input */}
         <div
+          onClick={() => setCurrentScreen('login-phone-focus')}
           className={`flex items-center border rounded-xl p-4 mb-4 ${
             isPhoneFocused ? 'border-2' : 'border-slate-200'
           }`}
-          style={isPhoneFocused ? { borderColor: primaryColor } : {}}
+          style={{ ...(isPhoneFocused ? { borderColor: primaryColor } : {}), cursor: 'pointer' }}
         >
           <div className="flex items-center gap-2 pr-3 border-r border-slate-200">
             <div className="w-6 h-4 bg-gradient-to-b from-red-500 via-white to-blue-900 rounded-sm" />
@@ -87,10 +90,11 @@ export function LoginScreen({ variant = 'default' }: LoginScreenProps) {
 
         {/* Password input */}
         <div
+          onClick={() => setCurrentScreen('login-password-focus')}
           className={`border rounded-xl p-4 mb-2 ${
             isPasswordFocused ? 'border-2' : 'border-slate-200'
           }`}
-          style={isPasswordFocused ? { borderColor: primaryColor } : {}}
+          style={{ ...(isPasswordFocused ? { borderColor: primaryColor } : {}), cursor: 'pointer' }}
         >
           <p style={{ ...typography.small, color: textSecondaryColor }}>
             Password
@@ -99,13 +103,14 @@ export function LoginScreen({ variant = 'default' }: LoginScreenProps) {
 
         {/* Forgot password */}
         <div className="text-right mb-8">
-          <button style={{ ...typography.small, color: primaryColor, fontWeight: 500 }}>
+          <button onClick={() => setCurrentScreen('login-password-focus')} style={{ ...typography.small, color: primaryColor, fontWeight: 500 }}>
             {texts.forgotPassword}
           </button>
         </div>
 
         {/* Login button */}
         <button
+          onClick={() => setCurrentScreen('choose-auth')}
           className="w-full py-4 rounded-full text-white"
           style={{ ...typography.button, backgroundColor: primaryColor }}
         >
@@ -115,9 +120,12 @@ export function LoginScreen({ variant = 'default' }: LoginScreenProps) {
         {/* Sign up link */}
         <p className="text-center mt-6" style={{ ...typography.small, color: textSecondaryColor }}>
           {texts.dontHaveAccount}{' '}
-          <span style={{ fontWeight: 600, color: primaryColor }}>
+          <button
+            onClick={() => setCurrentScreen('signup')}
+            style={{ fontWeight: 600, color: primaryColor }}
+          >
             {texts.signupLink}
-          </span>
+          </button>
         </p>
       </div>
 

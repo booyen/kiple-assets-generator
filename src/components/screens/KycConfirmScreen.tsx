@@ -5,7 +5,7 @@ import { StatusBar } from './shared/StatusBar';
 import { ChevronLeft } from 'lucide-react';
 
 export function KycConfirmScreen() {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, setCurrentScreen } = useCustomizationStore();
 
   const fields = [
     { label: 'Full Name', value: 'Ahmad bin Abdullah' },
@@ -22,6 +22,7 @@ export function KycConfirmScreen() {
       {/* Header */}
       <div className="flex items-center gap-4 px-6 py-4">
         <button
+          onClick={() => setCurrentScreen('kyc-id-type')}
           className="w-10 h-10 rounded-xl flex items-center justify-center"
           style={{ backgroundColor: `${primaryColor}10` }}
         >
@@ -75,12 +76,14 @@ export function KycConfirmScreen() {
       {/* Buttons */}
       <div className="px-6 pb-10 space-y-3">
         <button
+          onClick={() => setCurrentScreen('kyc-loading')}
           className="w-full py-4 rounded-full text-base font-semibold text-white"
           style={{ backgroundColor: primaryColor }}
         >
           Confirm & Continue
         </button>
         <button
+          onClick={() => setCurrentScreen('kyc-id-type-alt')}
           className="w-full py-4 rounded-full text-base font-semibold border"
           style={{ color: primaryColor, borderColor: primaryColor }}
         >

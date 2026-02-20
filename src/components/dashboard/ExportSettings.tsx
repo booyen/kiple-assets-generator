@@ -42,7 +42,7 @@ export function ExportSettings({
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="space-y-3">
       {/* Export progress */}
       {exportProgress && (
         <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-lg">
@@ -51,121 +51,122 @@ export function ExportSettings({
         </div>
       )}
 
-      {/* Format selector */}
-      <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
-        <button
-          onClick={() => setExportFormat('png')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-            exportFormat === 'png'
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
-          }`}
-        >
-          PNG
-        </button>
-        <button
-          onClick={() => setExportFormat('jpeg')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-            exportFormat === 'jpeg'
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
-          }`}
-        >
-          JPEG
-        </button>
-      </div>
+      <div className="grid grid-cols-1 gap-2">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Output</p>
 
-      {/* Device frame toggle */}
-      <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
-        <button
-          onClick={() => setIncludeDeviceFrame(false)}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors flex items-center gap-1.5 ${
-            !includeDeviceFrame
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
-          }`}
-          title="Screen only"
-        >
-          <Monitor size={16} />
-          <span>Screen</span>
-        </button>
-        <button
-          onClick={() => setIncludeDeviceFrame(true)}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors flex items-center gap-1.5 ${
-            includeDeviceFrame
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
-          }`}
-          title="With device frame"
-        >
-          <Smartphone size={16} />
-          <span>Device</span>
-        </button>
-      </div>
-
-      {/* Device type (only show when frame is enabled) */}
-      {includeDeviceFrame && (
-        <div className="relative">
-          <select
-            value={deviceType}
-            onChange={(e) => setDeviceType(e.target.value as 'iphone' | 'android')}
-            className="appearance-none pl-3 pr-8 py-2 text-sm bg-slate-100 border-0 rounded-lg font-medium text-slate-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+        {/* Format selector */}
+        <div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
+          <button
+            onClick={() => setExportFormat('png')}
+            className={`flex-1 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${exportFormat === 'png'
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+              }`}
           >
-            <option value="iphone">iPhone</option>
-            <option value="android">Android</option>
-          </select>
-          <ChevronDown
-            size={14}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
-          />
+            PNG
+          </button>
+          <button
+            onClick={() => setExportFormat('jpeg')}
+            className={`flex-1 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${exportFormat === 'jpeg'
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+              }`}
+          >
+            JPEG
+          </button>
         </div>
-      )}
 
-      {/* Divider */}
-      <div className="w-px h-8 bg-slate-200" />
+        {/* Device frame toggle */}
+        <div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
+          <button
+            onClick={() => setIncludeDeviceFrame(false)}
+            className={`flex-1 px-3 py-1.5 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-1.5 ${!includeDeviceFrame
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+              }`}
+            title="Screen only"
+          >
+            <Monitor size={16} />
+            <span>Screen</span>
+          </button>
+          <button
+            onClick={() => setIncludeDeviceFrame(true)}
+            className={`flex-1 px-3 py-1.5 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-1.5 ${includeDeviceFrame
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+              }`}
+            title="With device frame"
+          >
+            <Smartphone size={16} />
+            <span>Device</span>
+          </button>
+        </div>
 
-      {/* Export buttons */}
-      <button
-        onClick={() => handleExport('current', onExportCurrent)}
-        disabled={isExporting}
-        className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-        title="Download current screen"
-      >
-        {exportingType === 'current' ? (
-          <Loader2 size={16} className="animate-spin" />
-        ) : (
-          <Download size={16} />
+        {/* Device type (only show when frame is enabled) */}
+        {includeDeviceFrame && (
+          <div className="relative">
+            <select
+              value={deviceType}
+              onChange={(e) => setDeviceType(e.target.value as 'iphone' | 'android')}
+              className="w-full appearance-none pl-3 pr-8 py-2 text-sm bg-slate-100 border-0 rounded-lg font-medium text-slate-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="iphone">iPhone</option>
+              <option value="android">Android</option>
+            </select>
+            <ChevronDown
+              size={14}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
+            />
+          </div>
         )}
-        Current
-      </button>
+      </div>
 
-      <button
-        onClick={() => handleExport('selected', onExportSelected)}
-        disabled={isExporting || selectedScreens.length === 0}
-        className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg font-medium hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-        title="Download selected screens as ZIP"
-      >
-        {exportingType === 'selected' ? (
-          <Loader2 size={16} className="animate-spin" />
-        ) : (
-          <Package size={16} />
-        )}
-        Selected ({selectedScreens.length})
-      </button>
+      <div className="w-full h-px bg-border" />
 
-      <button
-        onClick={() => handleExport('all', onExportAll)}
-        disabled={isExporting}
-        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-        title="Download all screens as ZIP"
-      >
-        {exportingType === 'all' ? (
-          <Loader2 size={16} className="animate-spin" />
-        ) : (
-          <Package size={16} />
-        )}
-        All
-      </button>
+      <div className="grid grid-cols-1 gap-2">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Download</p>
+        <button
+          onClick={() => handleExport('current', onExportCurrent)}
+          disabled={isExporting}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-secondary text-foreground rounded-lg font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          title="Download current screen"
+        >
+          {exportingType === 'current' ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Download size={16} />
+          )}
+          Current
+        </button>
+
+        <button
+          onClick={() => handleExport('selected', onExportSelected)}
+          disabled={isExporting || selectedScreens.length === 0}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          title="Download selected screens as ZIP"
+        >
+          {exportingType === 'selected' ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Package size={16} />
+          )}
+          Selected ({selectedScreens.length})
+        </button>
+
+        <button
+          onClick={() => handleExport('all', onExportAll)}
+          disabled={isExporting}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          title="Download all screens as ZIP"
+        >
+          {exportingType === 'all' ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Package size={16} />
+          )}
+          All Screens
+        </button>
+      </div>
     </div>
   );
 }

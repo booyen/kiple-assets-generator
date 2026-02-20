@@ -1,5 +1,9 @@
 'use client';
 
+import { Input } from './input';
+import { Textarea } from './textarea';
+import { Label } from './label';
+
 interface TextInputProps {
   label: string;
   value: string;
@@ -17,26 +21,23 @@ export function TextInput({
   multiline = false,
   rows = 2
 }: TextInputProps) {
-  const baseClasses = "w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all";
-
   return (
-    <div className="space-y-1.5">
-      <label className="text-sm font-medium text-slate-700">{label}</label>
+    <div className="grid w-full gap-1.5">
+      <Label>{label}</Label>
       {multiline ? (
-        <textarea
+        <Textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           rows={rows}
-          className={`${baseClasses} resize-none`}
+          className="resize-none"
         />
       ) : (
-        <input
+        <Input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={baseClasses}
         />
       )}
     </div>

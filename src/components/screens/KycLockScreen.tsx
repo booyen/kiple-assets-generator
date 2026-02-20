@@ -4,7 +4,7 @@ import { useCustomizationStore } from '@/store/useCustomizationStore';
 import { StatusBar } from './shared/StatusBar';
 
 export function KycLockScreen() {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts, setCurrentScreen } = useCustomizationStore();
 
   return (
     <div className="mobile-screen flex flex-col" style={{ backgroundColor }}>
@@ -58,6 +58,7 @@ export function KycLockScreen() {
       {/* Button */}
       <div className="px-6 pb-10">
         <button
+          onClick={() => setCurrentScreen('kyc-id-type')}
           className="w-full py-4 rounded-full text-base font-semibold text-white"
           style={{ backgroundColor: primaryColor }}
         >

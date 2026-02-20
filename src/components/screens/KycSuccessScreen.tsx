@@ -4,7 +4,7 @@ import { useCustomizationStore } from '@/store/useCustomizationStore';
 import { CheckCircle2 } from 'lucide-react';
 
 export function KycSuccessScreen() {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, setCurrentScreen } = useCustomizationStore();
 
   return (
     <div
@@ -35,6 +35,7 @@ export function KycSuccessScreen() {
 
       {/* Button */}
       <button
+        onClick={() => setCurrentScreen('home')}
         className="w-full py-4 rounded-full text-base font-semibold text-white"
         style={{ backgroundColor: primaryColor }}
       >

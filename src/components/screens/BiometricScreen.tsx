@@ -7,7 +7,7 @@ interface BiometricScreenProps {
 }
 
 export function BiometricScreen({ type }: BiometricScreenProps) {
-  const { backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
+  const { backgroundColor, textPrimaryColor, textSecondaryColor, texts, setCurrentScreen } = useCustomizationStore();
 
   const title = type === 'touch' ? texts.touchIdTitle : texts.faceIdTitle;
   const desc = type === 'touch' ? texts.touchIdDesc : texts.faceIdDesc;
@@ -16,6 +16,7 @@ export function BiometricScreen({ type }: BiometricScreenProps) {
     <div
       className="mobile-screen flex flex-col items-center justify-center px-8"
       style={{ backgroundColor }}
+      onClick={() => setCurrentScreen('registration-success')}
     >
       {/* Icon */}
       <div className="mb-8">

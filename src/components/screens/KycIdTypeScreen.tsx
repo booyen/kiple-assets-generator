@@ -9,7 +9,7 @@ interface KycIdTypeScreenProps {
 }
 
 export function KycIdTypeScreen({ variant = 'default' }: KycIdTypeScreenProps) {
-  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts } = useCustomizationStore();
+  const { primaryColor, backgroundColor, textPrimaryColor, textSecondaryColor, texts, setCurrentScreen } = useCustomizationStore();
   const helperText = variant === 'alt' ? 'Let’s get verification done in 3 steps' : "Here's what you gotta do";
 
   const steps = [
@@ -40,6 +40,7 @@ export function KycIdTypeScreen({ variant = 'default' }: KycIdTypeScreenProps) {
       {/* Close button */}
       <div className="flex justify-end px-6 py-4">
         <button
+          onClick={() => setCurrentScreen('home')}
           className="w-10 h-10 rounded-xl flex items-center justify-center"
           style={{ backgroundColor: `${primaryColor}10` }}
         >
@@ -99,6 +100,7 @@ export function KycIdTypeScreen({ variant = 'default' }: KycIdTypeScreenProps) {
       {/* Button */}
       <div className="px-6 pb-10">
         <button
+          onClick={() => setCurrentScreen('kyc-confirm-id')}
           className="w-full py-4 rounded-full text-base font-semibold text-white"
           style={{ backgroundColor: primaryColor }}
         >

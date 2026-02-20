@@ -114,6 +114,7 @@ export function AutoReloadScreen() {
     currencySymbol,
     texts,
     reloadMethods,
+    setCurrentScreen,
   } = useCustomizationStore();
 
   const typography = useTypography();
@@ -152,7 +153,7 @@ export function AutoReloadScreen() {
 
       {/* Header */}
       <div className="bg-white px-6 py-4 flex items-center border-b border-slate-100">
-        <button className="p-1 mr-3">
+        <button className="p-1 mr-3" onClick={() => setCurrentScreen('reload-method')}>
           <ArrowLeft size={24} style={{ color: textPrimaryColor }} />
         </button>
         <h1
@@ -250,6 +251,7 @@ export function AutoReloadScreen() {
       {/* Bottom Button */}
       <div className="px-6 py-4 bg-white border-t border-slate-100">
         <button
+          onClick={() => setCurrentScreen('reload-success')}
           className="w-full py-4 rounded-xl text-white font-semibold"
           style={{
             backgroundColor: primaryColor,

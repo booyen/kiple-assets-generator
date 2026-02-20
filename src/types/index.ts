@@ -1,5 +1,17 @@
 // Screen types
-export type ScreenCategory = 'splash' | 'onboarding' | 'auth' | 'ekyc' | 'home' | 'reload';
+export type ScreenCategory =
+  | 'splash'
+  | 'onboarding'
+  | 'auth'
+  | 'ekyc'
+  | 'home'
+  | 'reload'
+  | 'notifications'
+  | 'history'
+  | 'transfer'
+  | 'visa'
+  | 'insurance'
+  | 'scanpay';
 
 // Typography types
 export type FontFamily = 'inter' | 'roboto' | 'poppins' | 'montserrat' | 'opensans' | 'lato' | 'nunito';
@@ -136,9 +148,6 @@ export type ReloadMethodSettings = Record<ReloadMethodKey, ReloadMethodConfig>;
 
 export type DeviceType = 'iphone' | 'android';
 export type ExportFormat = 'png' | 'jpeg';
-
-// Layout styles for e-wallet
-export type LayoutStyle = 'minimal' | 'card' | 'gradient';
 
 export interface ExportSettings {
   selectedScreens: string[];

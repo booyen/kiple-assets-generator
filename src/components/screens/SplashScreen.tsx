@@ -3,7 +3,7 @@
 import { useCustomizationStore } from '@/store/useCustomizationStore';
 
 export function SplashScreen() {
-  const { logo, appName, backgroundColor } = useCustomizationStore();
+  const { logo, appName, backgroundColor, setCurrentScreen } = useCustomizationStore();
 
   // Use custom logo if provided, otherwise use default Kiple logo
   const logoSrc = logo || '/img/klw.png';
@@ -12,6 +12,7 @@ export function SplashScreen() {
     <div
       className="mobile-screen flex items-center justify-center"
       style={{ backgroundColor }}
+      onClick={() => setCurrentScreen('onboarding-1')}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

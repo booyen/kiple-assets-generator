@@ -26,10 +26,10 @@ export function Preview({ screenRef }: PreviewProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 min-w-0 bg-slate-100 relative overflow-hidden">
+    <div className="flex-1 flex flex-col min-h-0 min-w-0 bg-muted relative overflow-hidden">
       {/* Screen name badge */}
       <div className="absolute top-4 left-4 z-20">
-        <span className="px-3 py-1.5 bg-white rounded-full text-sm font-medium text-slate-700 shadow-sm border border-slate-200">
+        <span className="px-3 py-1.5 bg-background rounded-full text-sm font-medium text-foreground shadow-sm border border-border">
           {currentScreenInfo?.name} ({currentIndex + 1}/{screens.length})
         </span>
       </div>
@@ -64,13 +64,13 @@ export function Preview({ screenRef }: PreviewProps) {
       </ZoomableCanvas>
 
       {/* Navigation controls */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-white rounded-full shadow-lg border border-slate-200 px-2 py-1.5">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-background rounded-full shadow-lg border border-border px-2 py-1.5">
         <button
           onClick={handlePrevious}
-          className="p-2 hover:bg-slate-100 rounded-full transition-colors"
+          className="p-2 hover:bg-secondary rounded-full transition-colors"
           title="Previous screen"
         >
-          <ChevronLeft size={20} className="text-slate-700" />
+          <ChevronLeft size={20} className="text-muted-foreground hover:text-foreground" />
         </button>
 
         {/* Screen dots */}
@@ -82,11 +82,10 @@ export function Preview({ screenRef }: PreviewProps) {
             <button
               key={screen.id}
               onClick={() => setCurrentScreen(screen.id)}
-              className={`h-2 rounded-full transition-all ${
-                screen.id === currentScreen
-                  ? 'w-6 bg-blue-600'
-                  : 'w-2 bg-slate-300 hover:bg-slate-400'
-              }`}
+              className={`h-2 rounded-full transition-all ${screen.id === currentScreen
+                ? 'w-6 bg-blue-600'
+                : 'w-2 bg-secondary hover:bg-secondary/80'
+                }`}
               title={screen.name}
             />
           ))}
@@ -94,10 +93,10 @@ export function Preview({ screenRef }: PreviewProps) {
 
         <button
           onClick={handleNext}
-          className="p-2 hover:bg-slate-100 rounded-full transition-colors"
+          className="p-2 hover:bg-secondary rounded-full transition-colors"
           title="Next screen"
         >
-          <ChevronRight size={20} className="text-slate-700" />
+          <ChevronRight size={20} className="text-muted-foreground hover:text-foreground" />
         </button>
       </div>
     </div>
